@@ -1,29 +1,43 @@
-
-
 <mat-card>
   <mat-card-header>
-    <h2>Cuaderno de notas</h2>
+    <mat-card-title>Iniciar Sesión</mat-card-title>
   </mat-card-header>
+
   <mat-card-content>
-    <form #loginForm="ngForm" (submit)="login()">
-      <h4 class="card-title">Acceso</h4>
-      <mat-error *ngIf="!loginValid">
-        El usuario y contraseña no son correctos!.
-      </mat-error>
-      <mat-form-field>
-        <mat-label>Usuario</mat-label>
-        <input matInput placeholder="Usuario" [(ngModel)]="user" name="username" required>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="fill">
+        <mat-label>Correo Electrónico</mat-label>
+        <input matInput formControlName="correoElectronico" type="email" required>
+        <mat-error *ngIf="loginForm.get('correoElectronico')?.hasError('required')">
+          El correo electrónico es requerido
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('correoElectronico')?.hasError('email')">
+          Ingrese un correo electrónico válido
+        </mat-error>
       </mat-form-field>
-      <mat-form-field>
+
+      <mat-form-field appearance="fill">
         <mat-label>Contraseña</mat-label>
-        <input matInput type="password" placeholder="Contraseña" [(ngModel)]="password" name="password"
-               required>
+        <input matInput formControlName="contrasena" type="password" required>
+        <mat-error *ngIf="loginForm.get('contrasena')?.hasError('required')">
+          La contraseña es requerida
+        </mat-error>
       </mat-form-field>
-      <button mat-raised-button color="primary" [disabled]="!loginForm.form.valid">Login</button>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{errorMessage}}
+      </div>
+
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">
+          Iniciar Sesión
+        </button>
+        <a mat-button routerLink="/registro">Registrarse</a>
+      </div>
     </form>
   </mat-card-content>
 </mat-card>
 
 <footer>
-
+  <p>&copy; {{year}} Gestión de Almacén. Todos los derechos reservados.</p>
 </footer>

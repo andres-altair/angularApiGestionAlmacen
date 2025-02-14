@@ -1,54 +1,59 @@
-import {inject, Injectable} from '@angular/core';
-import {
-  Auth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  user,
-  User
-} from '@angular/fire/auth';
+import { Injectable } from '@angular/core';
 import {Router} from '@angular/router';
-import {Observable} from 'rxjs';
-import {Nota} from '../models/nota';
+import {Observable, BehaviorSubject, tap} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {Usuario} from '../models/usuario';
+import * as CryptoJS from 'crypto-js';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private readonly API_URL = 'http://13.48.178.15:8081/api';
+  private usuarioSubject = new BehaviorSubject<Usuario | null>(null);
+  usuario$ = this.usuarioSubject.asObservable();
 
-  // 1. inyectar Auth de firebase
-  private auth = inject(Auth);
-  private router = inject(Router);
-  user$: Observable<User | null>;
-
-  // 1.1 Inicializar usuario
-  constructor() {
-    this.user$ = user(this.auth);
-  }
-
-  // 2. Módulo: Registro con inicio de sesión
-  async registro(email: string, password: string) {
-    try {
-      await createUserWithEmailAndPassword(this.auth, email, password);
-      this.router.navigate(['/notas']);
-    } catch (error) {
-      console.log(error);
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {
+    // Recuperar usuario del localStorage al iniciar
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+      this.usuarioSubject.next(JSON.parse(storedUser));
     }
   }
 
-  // 3. Módulo: Iniciar sesión
-  async login(email: string, password: string) {
-    try {
-      await signInWithEmailAndPassword(this.auth, email, password);
-      this.router.navigate(['/notas']);
-    } catch (e) {
-      console.error();
-    }
+  login(correoElectronico: string, contrasena: string): Observable<any> {
+    // Hashear la contraseña con SHA256
+    const hashedPassword = CryptoJS.SHA256(contrasena).toString();
+
+    return this.http.post<any>(`${this.API_URL}/auth/login`, {
+      correoElectronico,
+      contrasena: hashedPassword
+    }).pipe(
+      tap(response => {
+        if (response.usuario) {
+          localStorage.setItem('currentUser', JSON.stringify(response.usuario));
+          localStorage.setItem('token', response.token);
+          this.usuarioSubject.next(response.usuario);
+        }
+      })
+    );
   }
 
-  // 4. Módulo: Cerrar sesión
-  async logout() {
-    await signOut(this.auth);
+  logout() {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
+    this.usuarioSubject.next(null);
     this.router.navigate(['/login']);
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  getCurrentUser(): Usuario | null {
+    return this.usuarioSubject.value;
   }
 }

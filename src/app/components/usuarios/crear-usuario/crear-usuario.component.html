@@ -1,0 +1,77 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Crear Nuevo Usuario</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre Completo</mat-label>
+        <input matInput formControlName="nombreCompleto" required>
+        <mat-error *ngIf="usuarioForm.get('nombreCompleto')?.hasError('required')">
+          El nombre completo es requerido
+        </mat-error>
+        <mat-error *ngIf="usuarioForm.get('nombreCompleto')?.hasError('maxlength')">
+          El nombre no puede exceder 50 caracteres
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Móvil</mat-label>
+        <input matInput formControlName="movil">
+        <mat-error *ngIf="usuarioForm.get('movil')?.hasError('maxlength')">
+          El número móvil no puede exceder 15 caracteres
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Correo Electrónico</mat-label>
+        <input matInput formControlName="correoElectronico" type="email" required>
+        <mat-error *ngIf="usuarioForm.get('correoElectronico')?.hasError('required')">
+          El correo electrónico es requerido
+        </mat-error>
+        <mat-error *ngIf="usuarioForm.get('correoElectronico')?.hasError('email')">
+          Ingrese un correo electrónico válido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Rol</mat-label>
+        <mat-select formControlName="rolId" required>
+          <mat-option *ngFor="let rol of roles" [value]="rol.id">
+            {{rol.rol}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="usuarioForm.get('rolId')?.hasError('required')">
+          El rol es requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" formControlName="contrasena" required>
+        <mat-error *ngIf="usuarioForm.get('contrasena')?.hasError('required')">
+          La contraseña es requerida
+        </mat-error>
+        <mat-error *ngIf="usuarioForm.get('contrasena')?.hasError('minlength')">
+          La contraseña debe tener al menos 6 caracteres
+        </mat-error>
+      </mat-form-field>
+
+      <div class="foto-upload">
+        <input type="file" accept="image/*" (change)="onFileSelected($event)" #fileInput>
+        <button type="button" mat-raised-button (click)="fileInput.click()">
+          Seleccionar Foto
+        </button>
+        <img *ngIf="fotoSeleccionada" [src]="fotoSeleccionada" alt="Vista previa" class="preview-image">
+      </div>
+
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit" [disabled]="!usuarioForm.valid">
+          Crear Usuario
+        </button>
+        <button mat-button type="button" routerLink="/usuarios">Cancelar</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
