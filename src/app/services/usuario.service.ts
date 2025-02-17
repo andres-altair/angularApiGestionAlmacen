@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Usuario } from '../models/usuario';
 import { Rol } from '../models/rol';
 import { CrearUsuario } from '../models/crearUsuario';
@@ -13,11 +13,21 @@ export class UsuarioService {
   private http = inject(HttpClient);
 
   getUsuarios(): Observable<Usuario[]> {
-    return this.http.get<Usuario[]>(`${this.API_URL}/usuarios`);
+    return this.http.get<Usuario[]>(`${this.API_URL}/usuarios`).pipe(
+      map(usuarios => usuarios.map(usuario => ({
+        ...usuario,
+        foto: usuario.foto ? this.bytesToBase64Image(usuario.foto) : null
+      })))
+    );
   }
 
   getUsuario(id: number): Observable<Usuario> {
-    return this.http.get<Usuario>(`${this.API_URL}/usuarios/${id}`);
+    return this.http.get<Usuario>(`${this.API_URL}/usuarios/${id}`).pipe(
+      map(usuario => ({
+        ...usuario,
+        foto: usuario.foto ? this.bytesToBase64Image(usuario.foto) : null
+      }))
+    );
   }
 
   createUsuario(usuario: CrearUsuario): Observable<Usuario> {
@@ -68,15 +78,7 @@ export class UsuarioService {
     });
   }
 
-  // Utilidad para convertir Blob a Base64
-  blobToBase64(blob: Blob): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  }
+
 
   // Utilidad para convertir Base64 a Blob
   private base64ToBlob(base64: string, contentType = 'image/jpeg'): Blob {
@@ -87,5 +89,34 @@ export class UsuarioService {
     }
     const byteArray = new Uint8Array(byteNumbers);
     return new Blob([byteArray], { type: contentType });
+  }
+
+  private bytesToBase64Image(buffer: any): string {
+    if (!Array.isArray(buffer) || buffer.length === 0) {
+      return buffer;
+    }
+
+    // Detectar el tipo de imagen basado en los magic numbers
+    let mimeType = 'image/jpeg'; // default
+    
+    // PNG: 89 50 4E 47
+    if (buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4E && buffer[3] === 0x47) {
+      mimeType = 'image/png';
+    }
+    // GIF: 47 49 46 38
+    else if (buffer[0] === 0x47 && buffer[1] === 0x49 && buffer[2] === 0x46) {
+      mimeType = 'image/gif';
+    }
+    // JPEG: FF D8 FF
+    else if (buffer[0] === 0xFF && buffer[1] === 0xD8 && buffer[2] === 0xFF) {
+      mimeType = 'image/jpeg';
+    }
+    // WebP: 52 49 46 46 ... 57 45 42 50
+    else if (buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46) {
+      mimeType = 'image/webp';
+    }
+
+    const binary = String.fromCharCode.apply(null, buffer);
+    return `data:${mimeType};base64,${btoa(binary)}`;
   }
 }

@@ -5,5 +5,5 @@ export interface CrearUsuario {
     correoElectronico: string;
     rolId: number;
     contrasena: string;
-    foto?: string; // Base64 string para byte[]
+    foto?: string; 
 }

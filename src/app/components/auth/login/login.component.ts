@@ -38,13 +38,23 @@ export class LoginComponent {
   onSubmit(): void {
     if (this.loginForm.valid) {
       const { correoElectronico, contrasena } = this.loginForm.value;
+      
+      console.log('Intentando login con email:', correoElectronico); // Para debug
+      
       this.authService.login(correoElectronico, contrasena).subscribe({
-        next: () => {
-          this.router.navigate(['/']);
+        next: (response) => {
+          console.log('Login exitoso:', response);
+          // Forzar la navegación
+          Promise.resolve().then(() => {
+            this.router.navigate(['/admin']).then(
+              success => console.log('Navegación exitosa:', success),
+              error => console.error('Error en navegación:', error)
+            );
+          });
         },
         error: (error) => {
-          console.error('Error de login:', error);
-          this.errorMessage = 'Credenciales inválidas';
+          console.error('Error detallado:', error);
+          this.errorMessage = 'Error al iniciar sesión';
         }
       });
     }

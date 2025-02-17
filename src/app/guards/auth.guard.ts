@@ -6,7 +6,8 @@ export const AuthGuard = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (authService.getCurrentUser()) {
+  const user = authService.getCurrentUser();
+  if (user) {
     return true;
   }
 

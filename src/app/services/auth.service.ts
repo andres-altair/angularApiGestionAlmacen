@@ -9,7 +9,7 @@ import * as CryptoJS from 'crypto-js';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_URL = 'http://13.48.178.15:8081/api';
+  private readonly API_URL = 'http://localhost:8081/api';
   private usuarioSubject = new BehaviorSubject<Usuario | null>(null);
   usuario$ = this.usuarioSubject.asObservable();
 
@@ -25,21 +25,35 @@ export class AuthService {
   }
 
   login(correoElectronico: string, contrasena: string): Observable<any> {
-    // Hashear la contraseña con SHA256
     const hashedPassword = CryptoJS.SHA256(contrasena).toString();
 
-    return this.http.post<any>(`${this.API_URL}/auth/login`, {
+    const loginData = {
       correoElectronico,
       contrasena: hashedPassword
-    }).pipe(
-      tap(response => {
-        if (response.usuario) {
-          localStorage.setItem('currentUser', JSON.stringify(response.usuario));
-          localStorage.setItem('token', response.token);
-          this.usuarioSubject.next(response.usuario);
-        }
-      })
-    );
+    };
+
+    console.log('Datos de login:', loginData);
+
+    return this.http.post<any>(`${this.API_URL}/usuarios/autenticar`, loginData)
+      .pipe(
+        tap({
+          next: (response) => {
+            console.log('Respuesta del servidor:', response);
+            if (response.usuario) {
+              localStorage.setItem('currentUser', JSON.stringify(response.usuario));
+              localStorage.setItem('token', response.token);
+              this.usuarioSubject.next(response.usuario);
+              this.router.navigate(['/admin']);  
+            }
+          },
+          error: (error) => {
+            console.error('Error completo:', error);
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('token');
+            this.usuarioSubject.next(null);
+          }
+        })
+      );
   }
 
   logout() {

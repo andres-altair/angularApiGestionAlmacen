@@ -5,7 +5,6 @@ export interface Usuario {
     movil: string;
     correoElectronico: string;
     rolId: number;
-    foto: string; // Base64 string para byte[]
+    foto?: string | null;
     fechaCreacion: string; // ISO string para LocalDateTime
 }
-

@@ -5,6 +5,11 @@ import { PanelAdminComponent } from './panel-admin/panel-admin.component';
 export const USUARIOS_ROUTES: Routes = [
   {
     path: '',
+    redirectTo: 'lista',
+    pathMatch: 'full'
+  },
+  {
+    path: 'lista',
     component: PanelAdminComponent
   },
   {
