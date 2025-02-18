@@ -4,7 +4,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
-import { RouterLink, Router ,RouterModule} from '@angular/router';
+import { RouterLink, Router, RouterModule } from '@angular/router';
 import { UsuarioService } from '../../../services/usuario.service';
 import { Usuario } from '../../../models/usuario';
 
@@ -25,30 +25,32 @@ import { Usuario } from '../../../models/usuario';
 })
 export class PanelAdminComponent implements OnInit {
   usuarios: Usuario[] = [];
-  displayedColumns: string[] = ['id', 'nombreCompleto', 'correoElectronico', 'movil', 'rol', 'acciones'];
+  loading: boolean = true; // Variable para indicar si se están cargando los datos
+  error: string | null = null; // Variable para almacenar mensajes de error
 
-  constructor(private usuarioService: UsuarioService, private router: Router) {}
+  constructor(private usuarioService: UsuarioService, private router: Router) { }
 
   ngOnInit() {
-    this.cargarUsuarios();
-  }
+    this.loading = true; // Indica que se están cargando los datos
+    this.error = null; // Inicializa el mensaje de error
 
-  cargarUsuarios() {
     this.usuarioService.getUsuarios().subscribe({
       next: (usuarios) => {
         this.usuarios = usuarios;
+        this.loading = false; // Indica que se han cargado los datos
       },
       error: (error) => {
         console.error('Error al cargar usuarios:', error);
+        this.error = 'Error al cargar los usuarios. Por favor, inténtalo de nuevo más tarde.'; // Muestra un mensaje de error
+        this.loading = false; // Indica que la carga ha terminado (con error)
       }
     });
   }
-
-  eliminarUsuario(id: number) {
-    if (confirm('¿Está seguro de que desea eliminar este usuario?')) {
+    eliminarUsuario(id: number) {
+    if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
       this.usuarioService.deleteUsuario(id).subscribe({
         next: () => {
-          this.cargarUsuarios(); // Recargar la lista después de eliminar
+          //this.cargarUsuarios(); // Recargar la lista después de eliminar
         },
         error: (error) => {
           console.error('Error al eliminar usuario:', error);
@@ -69,4 +71,8 @@ export class PanelAdminComponent implements OnInit {
       error => console.error('Error en navegación:', error)
     );
   }
+
+
+  
 }
+

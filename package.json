@@ -22,6 +22,7 @@
     "@angular/router": "^18.2.0",
     "@types/crypto-js": "^4.2.2",
     "crypto-js": "^4.2.0",
+    "mime-types": "^2.1.35",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"

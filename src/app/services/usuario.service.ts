@@ -4,6 +4,8 @@ import { Observable, map } from 'rxjs';
 import { Usuario } from '../models/usuario';
 import { Rol } from '../models/rol';
 import { CrearUsuario } from '../models/crearUsuario';
+import mime from 'mime';
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +15,7 @@ export class UsuarioService {
   private http = inject(HttpClient);
 
   getUsuarios(): Observable<Usuario[]> {
-    return this.http.get<Usuario[]>(`${this.API_URL}/usuarios`).pipe(
-      map(usuarios => usuarios.map(usuario => ({
-        ...usuario,
-        foto: usuario.foto ? this.bytesToBase64Image(usuario.foto) : null
-      })))
-    );
+    return this.http.get<Usuario[]>(`${this.API_URL}/usuarios`);
   }
 
   getUsuario(id: number): Observable<Usuario> {
@@ -80,6 +77,10 @@ export class UsuarioService {
 
 
 
+  inferirTipoMIME(base64: string): string | null {
+    const tipo = mime.lookup(base64); // Intenta inferir el tipo MIME
+    return tipo ? tipo : null; // Devuelve el tipo o null si no se pudo inferir
+  }
   // Utilidad para convertir Base64 a Blob
   private base64ToBlob(base64: string, contentType = 'image/jpeg'): Blob {
     const byteCharacters = atob(base64.split(',')[1]);
