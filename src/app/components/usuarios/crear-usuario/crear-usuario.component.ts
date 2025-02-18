@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { UsuarioService } from '../../../services/usuario.service';
 import { CrearUsuario } from '../../../models/crearUsuario';
 import { Rol } from '../../../models/rol';
@@ -21,15 +21,16 @@ import { Rol } from '../../../models/rol';
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
-    MatCardModule
+    MatCardModule,
+    RouterModule
   ],
   templateUrl: './crear-usuario.component.html',
   styleUrls: ['./crear-usuario.component.scss']
 })
 export class CrearUsuarioComponent {
+  private router = inject(Router);
   private fb = inject(FormBuilder);
   private usuarioService = inject(UsuarioService);
-  private router = inject(Router);
 
   roles: Rol[] = [];
   usuarioForm: FormGroup;
@@ -83,5 +84,9 @@ export class CrearUsuarioComponent {
         }
       });
     }
+  }
+
+  volverAPanelAdmin() {
+    this.router.navigate(['/admin']);
   }
 }

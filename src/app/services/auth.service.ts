@@ -38,11 +38,12 @@ export class AuthService {
       .pipe(
         tap({
           next: (response) => {
-            console.log('Respuesta del servidor:', response);
-            if (response.usuario) {
-              localStorage.setItem('currentUser', JSON.stringify(response.usuario));
+            console.log('Respuesta del servidor en AuthService:', response);
+            // La respuesta del usuario viene directamente
+            if (response && response.id) {
+              localStorage.setItem('currentUser', JSON.stringify(response));
               localStorage.setItem('token', response.token);
-              this.usuarioSubject.next(response.usuario);
+              this.usuarioSubject.next(response);
               this.router.navigate(['/admin']);  
             }
           },

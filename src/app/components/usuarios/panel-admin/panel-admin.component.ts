@@ -4,7 +4,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router ,RouterModule} from '@angular/router';
 import { UsuarioService } from '../../../services/usuario.service';
 import { Usuario } from '../../../models/usuario';
 
@@ -17,7 +17,8 @@ import { Usuario } from '../../../models/usuario';
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
-    RouterLink
+    RouterLink,
+    RouterModule
   ],
   templateUrl: './panel-admin.component.html',
   styleUrls: ['./panel-admin.component.scss']
@@ -26,7 +27,7 @@ export class PanelAdminComponent implements OnInit {
   usuarios: Usuario[] = [];
   displayedColumns: string[] = ['id', 'nombreCompleto', 'correoElectronico', 'movil', 'rol', 'acciones'];
 
-  constructor(private usuarioService: UsuarioService) {}
+  constructor(private usuarioService: UsuarioService, private router: Router) {}
 
   ngOnInit() {
     this.cargarUsuarios();
@@ -54,5 +55,18 @@ export class PanelAdminComponent implements OnInit {
         }
       });
     }
+  }
+
+  irACrearUsuario() {
+    console.log('Intentando navegar a crear usuario...');
+    this.router.navigateByUrl('/crear-usuario').then(
+      success => {
+        console.log('Resultado de la navegación:', success);
+        if (!success) {
+          console.error('Error al navegar a crear usuario');
+        }
+      },
+      error => console.error('Error en navegación:', error)
+    );
   }
 }

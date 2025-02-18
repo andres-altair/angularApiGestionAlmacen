@@ -43,14 +43,23 @@ export class LoginComponent {
       
       this.authService.login(correoElectronico, contrasena).subscribe({
         next: (response) => {
-          console.log('Login exitoso:', response);
-          // Forzar la navegación
-          Promise.resolve().then(() => {
-            this.router.navigate(['/admin']).then(
-              success => console.log('Navegación exitosa:', success),
-              error => console.error('Error en navegación:', error)
-            );
-          });
+          console.log('Login exitoso - Respuesta completa:', response);
+          // La respuesta viene directamente, no necesitamos buscar en response.usuario
+          if (response && response.id) {  // Verificamos si la respuesta tiene un ID de usuario
+            setTimeout(() => {
+              this.router.navigate(['/admin']).then(
+                success => {
+                  if (!success) {
+                    console.error('Error en navegación: La ruta no está disponible');
+                  }
+                },
+                error => console.error('Error en navegación:', error)
+              );
+            }, 100);
+          } else {
+            console.error('Estructura de la respuesta:', response);
+            this.errorMessage = 'Error al iniciar sesión: datos de usuario inválidos';
+          }
         },
         error: (error) => {
           console.error('Error detallado:', error);

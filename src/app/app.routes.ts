@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './components/auth/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { PanelAdminComponent } from './components/usuarios/panel-admin/panel-admin.component';
+import { CrearUsuarioComponent } from './components/usuarios/crear-usuario/crear-usuario.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -10,6 +11,11 @@ export const routes: Routes = [
     component: PanelAdminComponent,
     canActivate: [AuthGuard]
   },
-  { path: '', redirectTo: '/admin', pathMatch: 'full' },
-  { path: '**', redirectTo: '/admin' }
+  { 
+    path: 'crear-usuario', 
+    component: CrearUsuarioComponent,
+    canActivate: [AuthGuard]
+  },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '**', redirectTo: 'login' }
 ];

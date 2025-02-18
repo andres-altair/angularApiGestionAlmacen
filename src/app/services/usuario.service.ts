@@ -9,7 +9,7 @@ import { CrearUsuario } from '../models/crearUsuario';
   providedIn: 'root'
 })
 export class UsuarioService {
-  private readonly API_URL = 'http://13.48.178.15:8081/api';
+  private readonly API_URL = 'http://localhost:8081/api';
   private http = inject(HttpClient);
 
   getUsuarios(): Observable<Usuario[]> {

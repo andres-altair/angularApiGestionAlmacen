@@ -1,7 +1,7 @@
 <div class="panel-container">
   <div class="header">
     <h1>Panel de Administración</h1>
-    <button mat-raised-button color="primary" routerLink="crear">
+    <button mat-raised-button color="primary" (click)="irACrearUsuario()">
       <mat-icon>add</mat-icon>
       Nuevo Usuario
     </button>
@@ -54,4 +54,6 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+
+  <router-outlet></router-outlet>
 </div>
