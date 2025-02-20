@@ -37,6 +37,7 @@ export class PanelAdminComponent implements OnInit {
     this.usuarioService.getUsuarios().subscribe({
       next: (usuarios) => {
         this.usuarios = usuarios;
+        
         this.loading = false; // Indica que se han cargado los datos
       },
       error: (error) => {
