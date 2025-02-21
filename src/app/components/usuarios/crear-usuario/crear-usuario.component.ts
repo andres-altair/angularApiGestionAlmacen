@@ -6,10 +6,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterModule } from '@angular/router';
 import { UsuarioService } from '../../../services/usuario.service';
 import { CrearUsuario } from '../../../models/crearUsuario';
 import { Rol } from '../../../models/rol';
+import { AuthService } from '../../../services/auth.service';
+
+
 
 @Component({
   selector: 'app-crear-usuario',
@@ -31,12 +35,22 @@ export class CrearUsuarioComponent {
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private usuarioService = inject(UsuarioService);
+  private authService = inject(AuthService);
+  private snackBar = inject(MatSnackBar);
 
   roles: Rol[] = [];
   usuarioForm: FormGroup;
   fotoSeleccionada: string | null = null;
+  errorMessage: string = '';
+  loading: boolean = false;
 
   constructor() {
+    // Verificar si el usuario está autenticado
+    if (!this.authService.getToken()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
     this.usuarioForm = this.fb.group({
       nombreCompleto: ['', [Validators.required, Validators.maxLength(50)]],
       movil: ['', [Validators.maxLength(15)]],
@@ -53,17 +67,27 @@ export class CrearUsuarioComponent {
   cargarRoles() {
     this.usuarioService.getRoles().subscribe({
       next: (roles) => this.roles = roles,
-      error: (error) => console.error('Error al cargar roles:', error)
+      error: (error) => console.error('Error al cargar roles:', error);
+      this.mostrarError('Error al cargar los roles. Por favor, intente nuevamente.');
+
     });
   }
 
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
+    // Validar el tipo de archivo
+    if (!file.type.startsWith('image/')) {
+      this.mostrarError('El archivo debe ser una imagen');
+      return;
+    }
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         this.fotoSeleccionada = e.target?.result as string;
         this.usuarioForm.patchValue({ foto: this.fotoSeleccionada });
+      };
+      reader.onerror = () => {
+        this.mostrarError('Error al leer el archivo');
       };
       reader.readAsDataURL(file);
     }
@@ -75,15 +99,36 @@ export class CrearUsuarioComponent {
       
       this.usuarioService.createUsuario(usuarioData).subscribe({
         next: () => {
-          // Navegar a la lista de usuarios después de crear
-          this.router.navigate(['/usuarios']);
+          this.snackBar.open('Usuario creado exitosamente', 'Cerrar', {
+            duration: 3000
+          });
+          this.router.navigate(['/admin']);
         },
         error: (error) => {
           console.error('Error al crear usuario:', error);
-          // Aquí podrías mostrar un mensaje de error al usuario
+          let mensaje = 'Error al crear el usuario';
+          if (error.status === 400) {
+            mensaje = 'Datos inválidos. Por favor, revise la información.';
+          } else if (error.status === 409) {
+            mensaje = 'El correo electrónico ya está registrado';
+          }
+          this.mostrarError(mensaje);
+        },
+        complete: () => {
+          this.loading = false;
         }
       });
+    } else {
+      this.mostrarError('Por favor, complete todos los campos requeridos correctamente');
     }
+  }
+
+  private mostrarError(mensaje: string) {
+    this.errorMessage = mensaje;
+    this.snackBar.open(mensaje, 'Cerrar', {
+      duration: 5000,
+      panelClass: ['error-snackbar']
+    });
   }
 
   volverAPanelAdmin() {

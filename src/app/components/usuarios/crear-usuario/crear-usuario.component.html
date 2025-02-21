@@ -5,6 +5,11 @@
 
   <mat-card-content>
     <form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()">
+      <!-- Mensaje de error general -->
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
       <mat-form-field appearance="fill">
         <mat-label>Nombre Completo</mat-label>
         <input matInput formControlName="nombreCompleto" required>
@@ -67,10 +72,16 @@
       </div>
 
       <div class="form-actions">
-        <button mat-raised-button color="primary" type="submit" [disabled]="!usuarioForm.valid">
-          Crear Usuario
+        <button mat-raised-button color="primary" 
+                type="submit" 
+                [disabled]="!usuarioForm.valid || loading">
+          {{ loading ? 'Creando...' : 'Crear Usuario' }}
         </button>
-        <button mat-button type="button" routerLink="/usuarios">Cancelar</button>
+        <button mat-button type="button" 
+                [disabled]="loading"
+                (click)="volverAPanelAdmin()">
+          Cancelar
+        </button>
       </div>
     </form>
   </mat-card-content>
