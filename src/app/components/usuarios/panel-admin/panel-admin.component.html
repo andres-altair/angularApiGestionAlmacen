@@ -9,38 +9,47 @@
 
   <table mat-table [dataSource]="usuarios" class="mat-elevation-z8">
 
+    <!-- Columna Foto -->
     <ng-container matColumnDef="foto">
       <th mat-header-cell *matHeaderCellDef>Foto</th>
       <td mat-cell *matCellDef="let usuario">
-        <img *ngIf="usuario.foto" [src]="'data:image/jpeg;base64,' + usuario.foto" alt="Foto de {{ usuario.nombreCompleto }}" class="rounded-image">
+        <img [src]="usuario.foto ? usuario.foto : 'https://via.placeholder.com/50'" 
+             alt="Foto de {{ usuario.nombreCompleto }}" 
+             style="width: 50px; height: 50px; border-radius: 50%;">
       </td>
     </ng-container>
 
+    <!-- Columna ID -->
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef>ID</th>
-      <td mat-cell *matCellDef="let usuario">{{usuario.id}}</td>
+      <td mat-cell *matCellDef="let usuario">{{ usuario.id }}</td>
     </ng-container>
 
+    <!-- Columna Nombre Completo -->
     <ng-container matColumnDef="nombreCompleto">
       <th mat-header-cell *matHeaderCellDef>Nombre</th>
-      <td mat-cell *matCellDef="let usuario">{{usuario.nombreCompleto}}</td>
+      <td mat-cell *matCellDef="let usuario">{{ usuario.nombreCompleto }}</td>
     </ng-container>
 
+    <!-- Columna Correo Electrónico -->
     <ng-container matColumnDef="correoElectronico">
       <th mat-header-cell *matHeaderCellDef>Email</th>
-      <td mat-cell *matCellDef="let usuario">{{usuario.correoElectronico}}</td>
+      <td mat-cell *matCellDef="let usuario">{{ usuario.correoElectronico }}</td>
     </ng-container>
 
+    <!-- Columna Móvil -->
     <ng-container matColumnDef="movil">
       <th mat-header-cell *matHeaderCellDef>Móvil</th>
-      <td mat-cell *matCellDef="let usuario">{{usuario.movil}}</td>
+      <td mat-cell *matCellDef="let usuario">{{ usuario.movil }}</td>
     </ng-container>
 
+    <!-- Columna Rol -->
     <ng-container matColumnDef="rol">
       <th mat-header-cell *matHeaderCellDef>Rol</th>
       <td mat-cell *matCellDef="let usuario">{{usuario.rolId}}</td>
     </ng-container>
 
+    <!-- Columna Acciones -->
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef>Acciones</th>
       <td mat-cell *matCellDef="let usuario">
