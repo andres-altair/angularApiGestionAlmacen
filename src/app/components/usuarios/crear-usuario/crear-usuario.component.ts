@@ -39,7 +39,7 @@ export class CrearUsuarioComponent {
   private snackBar = inject(MatSnackBar);
 
   roles: Rol[] = [];
-  usuarioForm: FormGroup;
+  usuarioForm!: FormGroup;
   fotoSeleccionada: string | null = null;
   errorMessage: string = '';
   loading: boolean = false;
@@ -67,34 +67,37 @@ export class CrearUsuarioComponent {
   cargarRoles() {
     this.usuarioService.getRoles().subscribe({
       next: (roles) => this.roles = roles,
-      error: (error) => console.error('Error al cargar roles:', error);
-      this.mostrarError('Error al cargar los roles. Por favor, intente nuevamente.');
-
+      error: (error) => {
+        console.error('Error al cargar roles:', error);
+        this.mostrarError('Error al cargar los roles. Por favor, intente nuevamente.');
+      }
     });
   }
 
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) {
+      return;
+    }
     // Validar el tipo de archivo
     if (!file.type.startsWith('image/')) {
       this.mostrarError('El archivo debe ser una imagen');
       return;
     }
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.fotoSeleccionada = e.target?.result as string;
-        this.usuarioForm.patchValue({ foto: this.fotoSeleccionada });
-      };
-      reader.onerror = () => {
-        this.mostrarError('Error al leer el archivo');
-      };
-      reader.readAsDataURL(file);
-    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.fotoSeleccionada = e.target?.result as string;
+      this.usuarioForm.patchValue({ foto: this.fotoSeleccionada });
+    };
+    reader.onerror = () => {
+      this.mostrarError('Error al leer el archivo');
+    };
+    reader.readAsDataURL(file);
   }
 
   onSubmit() {
     if (this.usuarioForm.valid) {
+      this.loading = true;
       const usuarioData: CrearUsuario = this.usuarioForm.value;
       
       this.usuarioService.createUsuario(usuarioData).subscribe({
@@ -102,24 +105,16 @@ export class CrearUsuarioComponent {
           this.snackBar.open('Usuario creado exitosamente', 'Cerrar', {
             duration: 3000
           });
-          this.router.navigate(['/admin']);
+          this.router.navigate(['/panel-admin']);
         },
         error: (error) => {
           console.error('Error al crear usuario:', error);
-          let mensaje = 'Error al crear el usuario';
-          if (error.status === 400) {
-            mensaje = 'Datos inválidos. Por favor, revise la información.';
-          } else if (error.status === 409) {
-            mensaje = 'El correo electrónico ya está registrado';
-          }
-          this.mostrarError(mensaje);
-        },
-        complete: () => {
+          this.mostrarError('Error al crear el usuario. Por favor, intente nuevamente.');
           this.loading = false;
         }
       });
     } else {
-      this.mostrarError('Por favor, complete todos los campos requeridos correctamente');
+      this.mostrarError('Por favor, complete todos los campos requeridos correctamente.');
     }
   }
 
@@ -127,11 +122,12 @@ export class CrearUsuarioComponent {
     this.errorMessage = mensaje;
     this.snackBar.open(mensaje, 'Cerrar', {
       duration: 5000,
-      panelClass: ['error-snackbar']
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom'
     });
   }
 
   volverAPanelAdmin() {
-    this.router.navigate(['/admin']);
+    this.router.navigate(['/panel-admin']);
   }
 }
