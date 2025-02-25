@@ -22,9 +22,9 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'eliminar-usuario', 
-    loadComponent: () => import('./components/usuarios/eliminar-usuario/eliminar-usuario.component')
-      .then(c => c.EliminarUsuarioComponent)
+    path: 'eliminar-usuario',
+    loadComponent: () => import('./components/usuarios/eliminar-usuario/eliminar-usuario.component').then(m => m.EliminarUsuarioComponent),
+    canActivate: [AuthGuard]
   },
   {
     path: '',
