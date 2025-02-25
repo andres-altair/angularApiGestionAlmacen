@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { Usuario } from '../models/usuario';
 import { Rol } from '../models/rol';
@@ -36,23 +36,17 @@ export class UsuarioService {
     );
   }
 
-  createUsuario(usuario: CrearUsuario): Observable<Usuario> {
-    // Si hay foto, asegurarse de que esté en formato byte[]base64
-    if (usuario.foto && usuario.foto.includes('data:image')) {
+  createUsuario(usuario: CrearUsuario): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    // Si hay una foto, convertirla de formato src a byte[] base64
+    if (usuario.foto) {
       usuario.foto = this.convertirSrcAByteBase64(usuario.foto);
     }
-    
-    const formData = new FormData();
-    formData.append('nombreCompleto', usuario.nombreCompleto);
-    formData.append('correoElectronico', usuario.correoElectronico);
-    formData.append('movil', usuario.movil);
-    formData.append('contrasena', usuario.contrasena);
-    formData.append('rolId', usuario.rolId.toString());
-    if (usuario.foto) {
-      formData.append('foto', usuario.foto);
-    }
-    
-    return this.http.post<Usuario>(`${this.API_URL}/usuarios`, formData);
+
+    return this.http.post(`${this.API_URL}/usuarios`, usuario, { headers });
   }
 
   updateUsuario(id: number, usuario: Partial<CrearUsuario>): Observable<Usuario> {
