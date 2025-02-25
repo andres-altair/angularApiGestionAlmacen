@@ -1,0 +1,46 @@
+.foto-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.user-photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.foto-container button {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.form-card {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 16px;
+}

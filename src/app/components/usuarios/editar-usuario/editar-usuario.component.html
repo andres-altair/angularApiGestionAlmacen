@@ -4,6 +4,15 @@
   </mat-card-header>
   <mat-card-content>
     <form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+      <!-- Previsualización de la foto -->
+      <div class="foto-container">
+        <img [src]="fotoPreview || 'assets/default-user.png'" alt="Foto de usuario" class="user-photo">
+        <button mat-icon-button type="button" (click)="fileInput.click()">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <input #fileInput type="file" (change)="onFileSelected($event)" style="display: none" accept="image/*">
+      </div>
+
       <mat-form-field appearance="fill">
         <mat-label>Nombre Completo</mat-label>
         <input matInput formControlName="nombreCompleto" required>
@@ -41,3 +50,4 @@
     </div>
   </mat-card-content>
 </mat-card>
+
