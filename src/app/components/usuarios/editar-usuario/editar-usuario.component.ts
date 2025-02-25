@@ -47,6 +47,15 @@ export class EditarUsuarioComponent implements OnInit {
   fotoPreview?: string;
   fotoSeleccionada?: string;
 
+  // Lista predefinida de roles para asegurar que todos estén disponibles
+  rolesDisponibles: Rol[] = [
+    { id: 1, rol: 'Administrador' },
+    { id: 2, rol: 'Gestor' },
+    { id: 3, rol: 'Operario' },
+    { id: 4, rol: 'Usuario' },
+    { id: 5, rol: 'Transportista' }
+  ];
+
   ngOnInit() {
     const currentUser = localStorage.getItem('currentUser');
     if (!currentUser) {
@@ -55,16 +64,14 @@ export class EditarUsuarioComponent implements OnInit {
     }
 
     this.initForm();
+    this.cargarRoles();
     
-    // Primero cargar roles, luego el usuario
-    this.cargarRoles().then(() => {
-      this.route.params.subscribe(params => {
-        this.usuarioId = +params['id'];
-        console.log('ID de usuario a cargar:', this.usuarioId);
-        if (this.usuarioId) {
-          this.cargarUsuario();
-        }
-      });
+    this.route.params.subscribe(params => {
+      this.usuarioId = +params['id'];
+      console.log('ID de usuario a cargar:', this.usuarioId);
+      if (this.usuarioId) {
+        this.cargarUsuario();
+      }
     });
   }
 
@@ -76,27 +83,15 @@ export class EditarUsuarioComponent implements OnInit {
       rolId: [null, [Validators.required]]
     });
 
-    // Observar cambios en rolId
     this.usuarioForm.get('rolId')?.valueChanges.subscribe(value => {
       console.log('Valor de rolId cambiado a:', value);
     });
   }
 
-  private async cargarRoles(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.usuarioService.getRoles().subscribe({
-        next: (roles) => {
-          this.roles = roles;
-          console.log('Roles cargados:', roles);
-          resolve();
-        },
-        error: (error) => {
-          console.error('Error al cargar roles:', error);
-          this.errorMessage = 'Error al cargar los roles';
-          reject(error);
-        }
-      });
-    });
+  private cargarRoles(): void {
+    // Usar la lista predefinida de roles
+    this.roles = this.rolesDisponibles;
+    console.log('Roles cargados:', this.roles);
   }
 
   private cargarUsuario(): void {
@@ -108,7 +103,6 @@ export class EditarUsuarioComponent implements OnInit {
       .subscribe({
         next: (usuario) => {
           console.log('Usuario cargado:', usuario);
-          // Asegurarse de que el rolId sea un número
           const rolId = typeof usuario.rolId === 'string' ? parseInt(usuario.rolId) : usuario.rolId;
           console.log('RolId procesado:', rolId);
           
@@ -119,7 +113,6 @@ export class EditarUsuarioComponent implements OnInit {
             rolId: rolId
           });
 
-          // Verificar el estado del formulario después de patchValue
           console.log('Estado del formulario después de patch:', this.usuarioForm.value);
 
           if (usuario.foto) {
@@ -127,7 +120,6 @@ export class EditarUsuarioComponent implements OnInit {
             this.fotoSeleccionada = usuario.foto;
           }
 
-          // Verificar si el rol existe en la lista de roles
           if (rolId && !this.roles.some(r => r.id === rolId)) {
             console.warn('El rol del usuario no está en la lista de roles:', rolId);
             console.log('Roles disponibles:', this.roles.map(r => ({ id: r.id, rol: r.rol })));
@@ -172,7 +164,7 @@ export class EditarUsuarioComponent implements OnInit {
         .subscribe({
           next: () => {
             this.snackBar.open('Usuario actualizado con éxito', 'Cerrar', {
-              duration: 3000,
+              duration: 5000,
               horizontalPosition: 'center',
               verticalPosition: 'bottom'
             });
