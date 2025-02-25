@@ -53,16 +53,7 @@ export class PanelAdminComponent implements OnInit {
   }
 
   eliminarUsuario(id: number) {
-    if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
-      this.usuarioService.deleteUsuario(id).subscribe({
-        next: () => {
-          //this.cargarUsuarios(); // Recargar la lista después de eliminar
-        },
-        error: (error) => {
-          console.error('Error al eliminar usuario:', error);
-        }
-      });
-    }
+    this.router.navigate(['/eliminar-usuario'], { queryParams: { id: id } });
   }
 
   irACrearUsuario() {

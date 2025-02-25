@@ -1,0 +1,34 @@
+<mat-card class="form-card">
+  <mat-card-header>
+    <mat-card-title>Eliminar Usuario</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="eliminarForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+      <mat-form-field appearance="fill">
+        <mat-label>ID del Usuario</mat-label>
+        <input matInput formControlName="usuarioId" required type="number" placeholder="Ingrese el ID del usuario a eliminar">
+        <mat-error *ngIf="eliminarForm.get('usuarioId')?.hasError('required')">
+          El ID del usuario es requerido
+        </mat-error>
+        <mat-error *ngIf="eliminarForm.get('usuarioId')?.hasError('pattern')">
+          El ID debe ser un número
+        </mat-error>
+      </mat-form-field>
+
+      <div class="form-actions">
+        <button mat-raised-button color="warn" type="submit" [disabled]="!eliminarForm.valid || loading">
+          Eliminar Usuario
+        </button>
+        <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+      </div>
+    </form>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{errorMessage}}
+    </div>
+
+    <div *ngIf="loading" class="loading-spinner">
+      Procesando...
+    </div>
+  </mat-card-content>
+</mat-card>
