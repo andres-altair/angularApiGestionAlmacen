@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,9 +27,12 @@ export class PanelAdminComponent implements OnInit {
   usuarios: Usuario[] = [];
   loading: boolean = true; // Variable para indicar si se están cargando los datos
   error: string | null = null; // Variable para almacenar mensajes de error
-  displayedColumns: string[] = ['foto', 'id', 'nombreCompleto', 'correoElectronico', 'movil', 'rolId', 'fechaCreacion', 'acciones'];
+  displayedColumns: string[] = ['foto', 'nombreCompleto', 'correoElectronico', 'movil', 'rolId', 'fechaCreacion', 'acciones'];
 
-  constructor(private usuarioService: UsuarioService, private router: Router) { }
+  private usuarioService = inject(UsuarioService);
+  private router = inject(Router);
+
+  constructor() { }
 
   ngOnInit() {
     this.loading = true; // Indica que se están cargando los datos
@@ -48,7 +51,8 @@ export class PanelAdminComponent implements OnInit {
       }
     });
   }
-    eliminarUsuario(id: number) {
+
+  eliminarUsuario(id: number) {
     if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
       this.usuarioService.deleteUsuario(id).subscribe({
         next: () => {
@@ -74,6 +78,7 @@ export class PanelAdminComponent implements OnInit {
     );
   }
 
-
-  
+  editarUsuario(usuario: Usuario) {
+    this.router.navigate(['/editar-usuario', usuario.id]);
+  }
 }

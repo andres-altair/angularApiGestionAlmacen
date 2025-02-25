@@ -17,6 +17,11 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'editar-usuario/:id',
+    loadComponent: () => import('./components/usuarios/editar-usuario/editar-usuario.component').then(m => m.EditarUsuarioComponent),
+    canActivate: [AuthGuard]
+  },
+  {
     path: '',
     redirectTo: '/panel-admin',
     pathMatch: 'full'

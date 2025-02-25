@@ -50,20 +50,16 @@ export class UsuarioService {
   }
 
   updateUsuario(id: number, usuario: Partial<CrearUsuario>): Observable<Usuario> {
-    // Si hay foto, asegurarse de que esté en formato byte[]base64
-    if (usuario.foto && usuario.foto.includes('data:image')) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    // Si hay una foto, convertirla de formato src a byte[] base64
+    if (usuario.foto) {
       usuario.foto = this.convertirSrcAByteBase64(usuario.foto);
     }
-    
-    const formData = new FormData();
-    if (usuario.nombreCompleto) formData.append('nombreCompleto', usuario.nombreCompleto);
-    if (usuario.correoElectronico) formData.append('correoElectronico', usuario.correoElectronico);
-    if (usuario.movil) formData.append('movil', usuario.movil);
-    if (usuario.contrasena) formData.append('password', usuario.contrasena);
-    if (usuario.rolId) formData.append('rolId', usuario.rolId.toString());
-    if (usuario.foto) formData.append('foto', usuario.foto);
-    
-    return this.http.put<Usuario>(`${this.API_URL}/usuarios/${id}`, formData);
+
+    return this.http.put<Usuario>(`${this.API_URL}/usuarios/${id}`, usuario, { headers });
   }
 
   deleteUsuario(id: number): Observable<void> {
