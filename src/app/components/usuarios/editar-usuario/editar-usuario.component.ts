@@ -60,6 +60,7 @@ export class EditarUsuarioComponent implements OnInit {
     this.cargarRoles().then(() => {
       this.route.params.subscribe(params => {
         this.usuarioId = +params['id'];
+        console.log('ID de usuario a cargar:', this.usuarioId);
         if (this.usuarioId) {
           this.cargarUsuario();
         }
@@ -73,6 +74,11 @@ export class EditarUsuarioComponent implements OnInit {
       correoElectronico: ['', [Validators.required, Validators.email]],
       movil: ['', [Validators.required]],
       rolId: [null, [Validators.required]]
+    });
+
+    // Observar cambios en rolId
+    this.usuarioForm.get('rolId')?.valueChanges.subscribe(value => {
+      console.log('Valor de rolId cambiado a:', value);
     });
   }
 
@@ -95,6 +101,8 @@ export class EditarUsuarioComponent implements OnInit {
 
   private cargarUsuario(): void {
     this.loading = true;
+    console.log('Iniciando carga de usuario...');
+    
     this.usuarioService.getUsuario(this.usuarioId)
       .pipe(finalize(() => this.loading = false))
       .subscribe({
@@ -102,6 +110,7 @@ export class EditarUsuarioComponent implements OnInit {
           console.log('Usuario cargado:', usuario);
           // Asegurarse de que el rolId sea un número
           const rolId = typeof usuario.rolId === 'string' ? parseInt(usuario.rolId) : usuario.rolId;
+          console.log('RolId procesado:', rolId);
           
           this.usuarioForm.patchValue({
             nombreCompleto: usuario.nombreCompleto,
@@ -109,6 +118,9 @@ export class EditarUsuarioComponent implements OnInit {
             movil: usuario.movil,
             rolId: rolId
           });
+
+          // Verificar el estado del formulario después de patchValue
+          console.log('Estado del formulario después de patch:', this.usuarioForm.value);
 
           if (usuario.foto) {
             this.fotoPreview = usuario.foto;
@@ -118,6 +130,7 @@ export class EditarUsuarioComponent implements OnInit {
           // Verificar si el rol existe en la lista de roles
           if (rolId && !this.roles.some(r => r.id === rolId)) {
             console.warn('El rol del usuario no está en la lista de roles:', rolId);
+            console.log('Roles disponibles:', this.roles.map(r => ({ id: r.id, rol: r.rol })));
           }
         },
         error: (error) => {

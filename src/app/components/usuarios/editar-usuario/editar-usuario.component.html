@@ -32,7 +32,11 @@
         <mat-label>Rol</mat-label>
         <mat-select formControlName="rolId" required>
           <mat-option *ngFor="let rol of roles" [value]="rol.id">
-            {{rol.rol}}
+            {{ rol.id === 1 ? 'Administrador' :
+               rol.id === 2 ? 'Gestor' :
+               rol.id === 3 ? 'Operario' :
+               rol.id === 4 ? 'Usuario' :
+               rol.id === 5 ? 'Transportista' : rol.rol }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -50,4 +54,3 @@
     </div>
   </mat-card-content>
 </mat-card>
-
