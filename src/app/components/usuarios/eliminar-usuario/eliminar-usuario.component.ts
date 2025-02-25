@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { UsuarioService } from '../../../services/usuario.service';
 
 @Component({
@@ -28,11 +28,13 @@ export class EliminarUsuarioComponent implements OnInit {
   private fb = inject(FormBuilder);
   private usuarioService = inject(UsuarioService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private snackBar = inject(MatSnackBar);
 
   eliminarForm!: FormGroup;
   errorMessage: string = '';
   loading: boolean = false;
+  usuarioId: number = 0;
 
   ngOnInit() {
     const currentUser = localStorage.getItem('currentUser');
@@ -42,6 +44,16 @@ export class EliminarUsuarioComponent implements OnInit {
     }
 
     this.initForm();
+
+    // Obtener el ID de los query params
+    this.route.queryParams.subscribe(params => {
+      if (params['id']) {
+        this.usuarioId = +params['id'];
+        this.eliminarForm.patchValue({
+          usuarioId: this.usuarioId
+        });
+      }
+    });
   }
 
   private initForm(): void {
@@ -54,9 +66,15 @@ export class EliminarUsuarioComponent implements OnInit {
     if (this.eliminarForm.valid) {
       this.loading = true;
       this.errorMessage = '';
-      const usuarioId = parseInt(this.eliminarForm.get('usuarioId')?.value);
+      const idAEliminar = parseInt(this.eliminarForm.get('usuarioId')?.value);
 
-      this.usuarioService.deleteUsuario(usuarioId).subscribe({
+      if (idAEliminar !== this.usuarioId) {
+        this.errorMessage = 'El ID ingresado no coincide con el usuario a eliminar';
+        this.loading = false;
+        return;
+      }
+
+      this.usuarioService.deleteUsuario(idAEliminar).subscribe({
         next: () => {
           this.loading = false;
           this.snackBar.open('Usuario eliminado con éxito', 'Cerrar', {

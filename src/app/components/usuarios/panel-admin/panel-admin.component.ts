@@ -69,7 +69,8 @@ export class PanelAdminComponent implements OnInit {
     );
   }
 
-  editarUsuario(usuario: Usuario) {
-    this.router.navigate(['/editar-usuario', usuario.id]);
+  editarUsuario(id: number) {
+    console.log('Editando usuario con ID:', id);
+    this.router.navigate(['/editar-usuario', id]);
   }
 }
