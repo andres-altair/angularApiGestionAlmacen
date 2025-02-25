@@ -16,3 +16,36 @@ th, td {
   text-align: left;
   border-bottom: 1px solid #ddd; /* Línea divisoria entre filas */
 }
+
+.admin-role {
+  color: #1976d2; // Azul
+  font-weight: 500;
+}
+
+.gestor-role {
+  color: #4caf50; // Verde
+  font-weight: 500;
+}
+
+.operario-role {
+  color: #ff9800; // Naranja
+  font-weight: 500;
+}
+
+.user-role {
+  color: #9c27b0; // Púrpura
+  font-weight: 500;
+}
+
+.transportista-role {
+  color: #f44336; // Rojo
+  font-weight: 500;
+}
+
+.mat-column-fechaCreacion {
+  min-width: 140px;
+}
+
+.mat-column-rolId {
+  min-width: 120px;
+}

@@ -27,6 +27,7 @@ export class PanelAdminComponent implements OnInit {
   usuarios: Usuario[] = [];
   loading: boolean = true; // Variable para indicar si se están cargando los datos
   error: string | null = null; // Variable para almacenar mensajes de error
+  displayedColumns: string[] = ['foto', 'id', 'nombreCompleto', 'correoElectronico', 'movil', 'rolId', 'fechaCreacion', 'acciones'];
 
   constructor(private usuarioService: UsuarioService, private router: Router) { }
 
@@ -76,4 +77,3 @@ export class PanelAdminComponent implements OnInit {
 
   
 }
-

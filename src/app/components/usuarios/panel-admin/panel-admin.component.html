@@ -13,9 +13,10 @@
     <ng-container matColumnDef="foto">
       <th mat-header-cell *matHeaderCellDef>Foto</th>
       <td mat-cell *matCellDef="let usuario">
-        <img [src]="usuario.foto ? usuario.foto : 'https://via.placeholder.com/50'" 
-             alt="Foto de {{ usuario.nombreCompleto }}" 
-             style="width: 50px; height: 50px; border-radius: 50%;">
+        <img [src]="usuario.foto || 'https://via.placeholder.com/50'"
+             [alt]="'Foto de ' + usuario.nombreCompleto"
+             style="width: 50px; height: 50px; border-radius: 50%;"
+             onerror="this.src='https://via.placeholder.com/50'">
       </td>
     </ng-container>
 
@@ -43,10 +44,31 @@
       <td mat-cell *matCellDef="let usuario">{{ usuario.movil }}</td>
     </ng-container>
 
-    <!-- Columna Rol -->
-    <ng-container matColumnDef="rol">
+    <ng-container matColumnDef="rolId">
       <th mat-header-cell *matHeaderCellDef>Rol</th>
-      <td mat-cell *matCellDef="let usuario">{{usuario.rolId}}</td>
+      <td mat-cell *matCellDef="let usuario">
+        <span [ngClass]="{
+          'admin-role': usuario.rolId === 1,
+          'gestor-role': usuario.rolId === 2,
+          'operario-role': usuario.rolId === 3,
+          'user-role': usuario.rolId === 4,
+          'transportista-role': usuario.rolId === 5
+        }">
+          {{ usuario.rolId === 1 ? 'Administrador' :
+             usuario.rolId === 2 ? 'Gestor' :
+             usuario.rolId === 3 ? 'Operario' :
+             usuario.rolId === 4 ? 'Usuario' :
+             usuario.rolId === 5 ? 'Transportista' : 'Desconocido' }}
+        </span>
+      </td>
+    </ng-container>
+
+    <!-- Columna Fecha Creación -->
+    <ng-container matColumnDef="fechaCreacion">
+      <th mat-header-cell *matHeaderCellDef>Fecha Creación</th>
+      <td mat-cell *matCellDef="let usuario">
+        {{ usuario.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}
+      </td>
     </ng-container>
 
     <!-- Columna Acciones -->
@@ -62,8 +84,8 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="['foto', 'id', 'nombreCompleto', 'correoElectronico', 'movil', 'rol', 'acciones']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['foto', 'id', 'nombreCompleto', 'correoElectronico', 'movil', 'rol', 'acciones'];"></tr>
+    <tr mat-header-row *matHeaderRowDef="['foto', 'id', 'nombreCompleto', 'correoElectronico', 'movil', 'rolId', 'fechaCreacion', 'acciones']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['foto', 'id', 'nombreCompleto', 'correoElectronico', 'movil', 'rolId', 'fechaCreacion', 'acciones'];"></tr>
   </table>
 
   <router-outlet></router-outlet>
