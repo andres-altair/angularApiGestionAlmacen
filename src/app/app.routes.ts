@@ -1,21 +1,25 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './components/auth/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
-import { PanelAdminComponent } from './components/usuarios/panel-admin/panel-admin.component';
-import { CrearUsuarioComponent } from './components/usuarios/crear-usuario/crear-usuario.component';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
   { 
-    path: 'admin', 
-    component: PanelAdminComponent,
+    path: 'login',
+    loadComponent: () => import('./components/auth/login/login.component').then(m => m.LoginComponent)
+  },
+  {
+    path: 'panel-admin',
+    loadComponent: () => import('./components/usuarios/panel-admin/panel-admin.component').then(m => m.PanelAdminComponent),
     canActivate: [AuthGuard]
   },
-  { 
-    path: 'crear-usuario', 
-    component: CrearUsuarioComponent,
+  {
+    path: 'crear-usuario',
+    loadComponent: () => import('./components/usuarios/crear-usuario/crear-usuario.component').then(m => m.CrearUsuarioComponent),
     canActivate: [AuthGuard]
   },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' }
+  {
+    path: '',
+    redirectTo: '/panel-admin',
+    pathMatch: 'full'
+  },
+  { path: '**', redirectTo: '/panel-admin' }
 ];

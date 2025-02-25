@@ -31,32 +31,31 @@ import * as CryptoJS from 'crypto-js';
   styleUrls: ['./crear-usuario.component.scss']
 })
 export class CrearUsuarioComponent implements OnInit {
-  private router = inject(Router);
   private fb = inject(FormBuilder);
   private usuarioService = inject(UsuarioService);
   private authService = inject(AuthService);
+  private router = inject(Router);
   private snackBar = inject(MatSnackBar);
 
-  roles: Rol[] = [];
   usuarioForm!: FormGroup;
-  fotoSeleccionada: string | undefined = undefined;
+  roles: Rol[] = [];
   errorMessage: string = '';
   loading: boolean = false;
+  fotoSeleccionada?: string;
 
-  constructor() {
+  ngOnInit() {
     // Verificar si el usuario está autenticado
-    if (!this.authService.getToken()) {
-      this.router.navigate(['/login']);
-      return;
-    }
+    const currentUser = localStorage.getItem('currentUser');
+if (!currentUser) {
+  this.router.navigate(['/login']);
+  return;
+}
+
     this.initForm();
-    this.loadRoles();
+    this.cargarRoles();
   }
 
-  ngOnInit(): void {
-  }
-
-  private initForm() {
+  private initForm(): void {
     this.usuarioForm = this.fb.group({
       nombreCompleto: ['', [Validators.required, Validators.maxLength(50)]],
       correoElectronico: ['', [Validators.required, Validators.email]],
@@ -67,7 +66,7 @@ export class CrearUsuarioComponent implements OnInit {
     });
   }
 
-  private loadRoles() {
+  private cargarRoles() {
     this.roles = [
       { id: 1, rol: 'Administrador' },
       { id: 2, rol: 'Gestor' },
@@ -103,7 +102,6 @@ export class CrearUsuarioComponent implements OnInit {
       this.loading = true;
       this.errorMessage = '';
 
-      // Obtener la contraseña y crear el hash SHA-256
       const contrasenaPlana = this.usuarioForm.get('contrasena')?.value;
       const contrasenaHash = CryptoJS.SHA256(contrasenaPlana).toString();
 
@@ -111,24 +109,28 @@ export class CrearUsuarioComponent implements OnInit {
         nombreCompleto: this.usuarioForm.get('nombreCompleto')?.value,
         correoElectronico: this.usuarioForm.get('correoElectronico')?.value,
         movil: this.usuarioForm.get('movil')?.value,
-        contrasena: contrasenaHash, // Enviamos la contraseña hasheada
+        contrasena: contrasenaHash,
         rolId: this.usuarioForm.get('rolId')?.value,
         foto: this.fotoSeleccionada === null ? undefined : this.fotoSeleccionada
       };
 
       this.usuarioService.createUsuario(usuario).subscribe({
-        next: () => {
+        next: (response) => {
+          this.loading = false;
           this.snackBar.open('Usuario creado con éxito', 'Cerrar', {
-            duration: 3000,
+            duration: 5000,
             horizontalPosition: 'center',
             verticalPosition: 'bottom'
           });
-          this.router.navigate(['/panel-admin']);
+          // Asegurarnos de que mantenemos la sesión al redireccionar
+          if (localStorage.getItem('currentUser')) {
+            this.router.navigate(['/panel-admin']);
+          }
         },
         error: (error) => {
+          this.loading = false;
           console.error('Error al crear usuario:', error);
           this.errorMessage = 'Error al crear el usuario. Por favor, inténtalo de nuevo.';
-          this.loading = false;
         }
       });
     } else {
