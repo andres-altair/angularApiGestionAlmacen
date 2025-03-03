@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {MatToolbar} from '@angular/material/toolbar';
 import {MatAnchor, MatButton} from '@angular/material/button';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -13,8 +13,15 @@ import {RouterLink} from '@angular/router';
     RouterLink
   ],
   templateUrl: './menu.component.html',
-  styleUrl: './menu.component.css'
+  styleUrls: ['./menu.component.css']
 })
 export class MenuComponent {
+  constructor(private router: Router) {}
 
+  logout() {
+    // Limpiar el localStorage
+    localStorage.clear();
+    // Redirigir al login
+    this.router.navigate(['/login']);
+  }
 }
