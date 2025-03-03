@@ -124,7 +124,7 @@ if (!currentUser) {
           });
           // Asegurarnos de que mantenemos la sesión al redireccionar
           if (localStorage.getItem('currentUser')) {
-            this.router.navigate(['/panel-admin']);
+            this.router.navigate(['/admin']);
           }
         },
         error: (error) => {
@@ -148,6 +148,6 @@ if (!currentUser) {
   }
 
   volverAPanelAdmin() {
-    this.router.navigate(['/panel-admin']);
+    this.router.navigate(['/admin']);
   }
 }

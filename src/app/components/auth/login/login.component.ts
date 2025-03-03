@@ -7,6 +7,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {CommonModule} from '@angular/common';
+import { MenuComponent } from "../../menu/menu.component";
 
 @Component({
   selector: 'app-login',
@@ -18,8 +19,9 @@ import {CommonModule} from '@angular/common';
     MatInputModule,
     MatButtonModule,
     MatCardModule,
-    RouterLink
-  ],
+    RouterLink,
+    MenuComponent
+],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })

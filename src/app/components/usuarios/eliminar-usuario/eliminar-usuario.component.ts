@@ -82,7 +82,7 @@ export class EliminarUsuarioComponent implements OnInit {
             horizontalPosition: 'center',
             verticalPosition: 'bottom'
           });
-          this.router.navigate(['/panel-admin']);
+          this.router.navigate(['/admin']);
         },
         error: (error) => {
           this.loading = false;
@@ -94,6 +94,6 @@ export class EliminarUsuarioComponent implements OnInit {
   }
 
   cancelar() {
-    this.router.navigate(['/panel-admin']);
+    this.router.navigate(['/admin']);
   }
 }

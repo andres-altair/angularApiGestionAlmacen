@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import {MatToolbar} from '@angular/material/toolbar';
-import {MatAnchor, MatButton} from '@angular/material/button';
-import {Router, RouterLink} from '@angular/router';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatButton } from '@angular/material/button';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -9,7 +9,6 @@ import {Router, RouterLink} from '@angular/router';
   imports: [
     MatToolbar,
     MatButton,
-    MatAnchor,
     RouterLink
   ],
   templateUrl: './menu.component.html',

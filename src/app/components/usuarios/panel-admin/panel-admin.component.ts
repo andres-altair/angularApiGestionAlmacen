@@ -7,6 +7,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { RouterLink, Router, RouterModule } from '@angular/router';
 import { UsuarioService } from '../../../services/usuario.service';
 import { Usuario } from '../../../models/usuario';
+import { MenuComponent } from "../../menu/menu.component";
 
 @Component({
   selector: 'app-panel-admin',
@@ -17,9 +18,9 @@ import { Usuario } from '../../../models/usuario';
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
-    RouterLink,
-    RouterModule
-  ],
+    RouterModule,
+    MenuComponent
+],
   templateUrl: './panel-admin.component.html',
   styleUrls: ['./panel-admin.component.scss']
 })

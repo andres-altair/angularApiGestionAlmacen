@@ -168,7 +168,7 @@ export class EditarUsuarioComponent implements OnInit {
               horizontalPosition: 'center',
               verticalPosition: 'bottom'
             });
-            this.router.navigate(['/panel-admin']);
+            this.router.navigate(['/admin']);
           },
           error: (error) => {
             console.error('Error al actualizar usuario:', error);
@@ -179,6 +179,6 @@ export class EditarUsuarioComponent implements OnInit {
   }
 
   cancelar() {
-    this.router.navigate(['/panel-admin']);
+    this.router.navigate(['/admin']);
   }
 }
