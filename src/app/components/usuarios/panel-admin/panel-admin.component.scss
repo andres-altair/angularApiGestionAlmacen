@@ -1,5 +1,7 @@
 h1 {
   text-align: center;
+  margin: 0;
+  color: #1a237e;
 }
 /* En tu archivo de estilos CSS (tu-componente.component.css o styles.css) */
 .rounded-image {
@@ -20,28 +22,46 @@ th, td {
   border-bottom: 1px solid #ddd; /* Línea divisoria entre filas */
 }
 
+.panel-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
+
 .admin-role {
-  color: #1976d2; // Azul
+  color: #1a237e; 
   font-weight: 500;
 }
 
 .gestor-role {
-  color: #4caf50; // Verde
+  color: #2e7d32; 
   font-weight: 500;
 }
 
 .operario-role {
-  color: #ff9800; // Naranja
+  color: #f57c00; 
   font-weight: 500;
 }
 
 .user-role {
-  color: #9c27b0; // Púrpura
+  color: #0288d1; 
   font-weight: 500;
 }
 
 .transportista-role {
-  color: #f44336; // Rojo
+  color: #c2185b; 
   font-weight: 500;
 }
 
@@ -51,4 +71,8 @@ th, td {
 
 .mat-column-rolId {
   min-width: 120px;
+}
+
+.mat-mdc-row:hover {
+  background-color: #f5f5f5;
 }

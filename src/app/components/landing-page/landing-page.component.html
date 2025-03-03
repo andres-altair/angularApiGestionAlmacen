@@ -1,38 +1,39 @@
 <div class="landing-container mat-typography">
+  <mat-toolbar color="primary" class="title-toolbar">
+    <h1>Sistema de Gestión de Almacén</h1>
+  </mat-toolbar>
+
   <mat-card class="hero-section">
-    <mat-card-header>
-      <mat-card-title>
-        <h1>Sistema de Gestión de Almacén</h1>
-      </mat-card-title>
-      <mat-card-subtitle>
-        Optimiza la gestión de tu almacén con nuestra solución integral
-      </mat-card-subtitle>
-    </mat-card-header>
-
-    <mat-card class="carousel-container">
-      <div class="carousel-image-container">
-        <img [src]="currentImage.src" [alt]="currentImage.title">
-        <div class="carousel-caption">
-          <mat-icon>{{currentImage.icon}}</mat-icon>
-          <h3>{{currentImage.title}}</h3>
-          <p>{{currentImage.description}}</p>
-        </div>
+    <mat-card-content>
+      <div class="subtitle-section">
+        <mat-card-subtitle>
+          Optimiza la gestión de tu almacén con nuestra solución integral
+        </mat-card-subtitle>
       </div>
-    </mat-card>
 
-    <mat-card-actions class="buttons-container">
-      <button mat-raised-button color="primary" routerLink="/login">
-        <mat-icon>login</mat-icon>
-        Iniciar Sesión
-      </button>
-      <button mat-raised-button color="accent" routerLink="/register">
-        <mat-icon>person_add</mat-icon>
-        Registrarse
-      </button>
-    </mat-card-actions>
+      <mat-card-actions class="buttons-container">
+        <button mat-raised-button color="primary" routerLink="/login">
+          <mat-icon>login</mat-icon>
+          Iniciar Sesión
+        </button>
+        <button mat-raised-button color="accent" routerLink="/register">
+          <mat-icon>person_add</mat-icon>
+          Registrarse
+        </button>
+      </mat-card-actions>
+
+      <mat-card class="carousel-container">
+        <div class="carousel-image-container">
+          <img [src]="currentImage.src" [alt]="currentImage.title">
+          <div class="carousel-caption">
+            <mat-icon>{{currentImage.icon}}</mat-icon>
+            <h3>{{currentImage.title}}</h3>
+            <p>{{currentImage.description}}</p>
+          </div>
+        </div>
+      </mat-card>
+    </mat-card-content>
   </mat-card>
-
-  <mat-divider class="section-divider"></mat-divider>
 
   <section class="features-section">
     <h2>Características Principales</h2>

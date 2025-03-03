@@ -30,10 +30,10 @@ export class PanelAdminComponent implements OnInit {
   error: string | null = null; // Variable para almacenar mensajes de error
   displayedColumns: string[] = ['foto', 'nombreCompleto', 'correoElectronico', 'movil', 'rolId', 'fechaCreacion', 'acciones'];
 
-  private usuarioService = inject(UsuarioService);
-  private router = inject(Router);
-
-  constructor() { }
+  constructor(
+    private router: Router,
+    private usuarioService: UsuarioService
+  ) { }
 
   ngOnInit() {
     this.loading = true; // Indica que se están cargando los datos
@@ -58,20 +58,15 @@ export class PanelAdminComponent implements OnInit {
   }
 
   irACrearUsuario() {
-    console.log('Intentando navegar a crear usuario...');
-    this.router.navigateByUrl('/crear-usuario').then(
-      success => {
-        console.log('Resultado de la navegación:', success);
-        if (!success) {
-          console.error('Error al navegar a crear usuario');
-        }
-      },
-      error => console.error('Error en navegación:', error)
-    );
+    this.router.navigate(['/crear-usuario']);
   }
 
   editarUsuario(id: number) {
     console.log('Editando usuario con ID:', id);
     this.router.navigate(['/editar-usuario', id]);
+  }
+
+  volverAInicio() {
+    this.router.navigate(['/']);
   }
 }

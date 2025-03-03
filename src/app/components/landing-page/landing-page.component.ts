@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-landing-page',
@@ -17,7 +18,8 @@ import { MatDividerModule } from '@angular/material/divider';
     MatCardModule,
     MatIconModule,
     MatGridListModule,
-    MatDividerModule
+    MatDividerModule,
+    MatToolbarModule
   ],
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.css']
@@ -46,9 +48,8 @@ export class LandingPageComponent {
   ];
 
   features = [
-    { icon: 'inventory_2', title: 'Control de Stock', description: 'Gestiona tu inventario en tiempo real' },
     { icon: 'local_shipping', title: 'Gestión de Envíos', description: 'Seguimiento de envíos y recepciones' },
-    { icon: 'assessment', title: 'Informes', description: 'Análisis detallado y reportes' },
+   
     { icon: 'qr_code_scanner', title: 'Escaneo QR', description: 'Sistema de códigos QR para tracking' }
   ];
 

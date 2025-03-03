@@ -3,10 +3,16 @@
 <div class="panel-container">
   <div class="header">
     <h1>Panel de Administración</h1>
-    <button mat-raised-button color="primary" (click)="irACrearUsuario()">
-      <mat-icon>add</mat-icon>
-      Nuevo Usuario
-    </button>
+    <div class="header-buttons">
+      <button mat-raised-button color="primary" (click)="irACrearUsuario()">
+        <mat-icon>add</mat-icon>
+        Nuevo Usuario
+      </button>
+      <button mat-raised-button color="accent" (click)="volverAInicio()">
+        <mat-icon>home</mat-icon>
+        Volver a Inicio
+      </button>
+    </div>
   </div>
 
   <table mat-table [dataSource]="usuarios" class="mat-elevation-z8">
