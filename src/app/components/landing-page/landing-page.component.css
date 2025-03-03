@@ -1,0 +1,121 @@
+.landing-container {
+  padding: 0;
+  text-align: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.hero-section {
+  padding: 2rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(to bottom right, #f5f5f5, #ffffff);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+h1 {
+  margin-bottom: 1rem;
+  color: #333;
+  font-size: 2.5rem;
+}
+
+.carousel-container {
+  width: 100%;
+  margin: 2rem auto;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 0;
+}
+
+.carousel-image-container {
+  width: 100%;
+  height: 500px;
+  position: relative;
+}
+
+.carousel-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.carousel-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 1.5rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.carousel-caption mat-icon {
+  font-size: 2rem;
+  height: 2rem;
+  width: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.carousel-caption h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.carousel-caption p {
+  margin: 0;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.buttons-container {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.buttons-container button {
+  padding: 0.5rem 2rem;
+}
+
+.buttons-container mat-icon {
+  margin-right: 0.5rem;
+}
+
+.section-divider {
+  margin: 3rem 0;
+}
+
+.features-section {
+  padding: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.features-section h2 {
+  margin-bottom: 2rem;
+  color: #333;
+  font-size: 2rem;
+}
+
+.feature-card {
+  width: 90%;
+  height: 90%;
+  transition: transform 0.2s;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+}
+
+.feature-card mat-icon {
+  font-size: 2rem;
+  height: 2rem;
+  width: 2rem;
+  color: #673ab7;
+}
