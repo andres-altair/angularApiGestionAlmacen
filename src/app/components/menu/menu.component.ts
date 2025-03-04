@@ -23,4 +23,7 @@ export class MenuComponent {
     // Redirigir al login
     this.router.navigate(['/login']);
   }
+  volverAInicio() {
+    this.router.navigate(['/']);
+  }
 }

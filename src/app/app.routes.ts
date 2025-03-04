@@ -35,5 +35,9 @@ export const routes: Routes = [
     loadComponent: () => import('./components/usuarios/eliminar-usuario/eliminar-usuario.component').then(m => m.EliminarUsuarioComponent),
     canActivate: [AuthGuard]
   },
-  { path: '**', redirectTo: '' }
+  { 
+    path: '**', 
+    redirectTo: '',
+    canActivate: [AuthGuard]
+  }
 ];
