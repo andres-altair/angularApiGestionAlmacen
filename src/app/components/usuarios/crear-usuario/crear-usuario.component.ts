@@ -42,6 +42,7 @@ export class CrearUsuarioComponent implements OnInit {
   errorMessage: string = '';
   loading: boolean = false;
   fotoSeleccionada?: string;
+  correoConfirmado?: boolean;
 
   ngOnInit() {
     // Verificar si el usuario está autenticado
@@ -111,7 +112,8 @@ if (!currentUser) {
         movil: this.usuarioForm.get('movil')?.value,
         contrasena: contrasenaHash,
         rolId: this.usuarioForm.get('rolId')?.value,
-        foto: this.fotoSeleccionada === null ? undefined : this.fotoSeleccionada
+        foto: this.fotoSeleccionada === null ? undefined : this.fotoSeleccionada,
+
       };
 
       this.usuarioService.createUsuario(usuario).subscribe({
