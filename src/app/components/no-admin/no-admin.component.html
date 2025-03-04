@@ -1,10 +1,87 @@
 <app-menu></app-menu>
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>Acceso Restringido</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <p>Lo sentimos, esta sección está reservada para administradores.</p>
-    <p>Por favor, contacta con un administrador si necesitas acceso.</p>
-  </mat-card-content>
-</mat-card>
+
+<div class="dashboard-container">
+  <!-- Header con saludo -->
+  <mat-card class="welcome-card">
+    <mat-card-content>
+      <div class="welcome-header">
+        <i class="fas fa-warehouse warehouse-icon"></i>
+        <h1>Bienvenido, {{currentUser?.nombreCompleto}}</h1>
+      </div>
+      <p class="role-text">{{getRolName(currentUser?.rolId)}}</p>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Grid de tarjetas informativas -->
+  <div class="dashboard-grid">
+    <!-- Inventario -->
+    <mat-card class="dashboard-card">
+      <mat-card-content>
+        <div class="card-icon-container">
+          <i class="fas fa-boxes"></i>
+        </div>
+        <h2>Gestión de Inventario</h2>
+        <p>Accede al control y seguimiento de productos en tiempo real</p>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Pedidos -->
+    <mat-card class="dashboard-card">
+      <mat-card-content>
+        <div class="card-icon-container">
+          <i class="fas fa-clipboard-list"></i>
+        </div>
+        <h2>Pedidos</h2>
+        <p>Gestiona y monitoriza los pedidos entrantes y salientes</p>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Envíos -->
+    <mat-card class="dashboard-card">
+      <mat-card-content>
+        <div class="card-icon-container">
+          <i class="fas fa-truck"></i>
+        </div>
+        <h2>Envíos</h2>
+        <p>Seguimiento de envíos y gestión de rutas de entrega</p>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Reportes -->
+    <mat-card class="dashboard-card">
+      <mat-card-content>
+        <div class="card-icon-container">
+          <i class="fas fa-chart-bar"></i>
+        </div>
+        <h2>Reportes</h2>
+        <p>Visualiza estadísticas y genera informes detallados</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Sección de actividad reciente -->
+  <mat-card class="activity-card">
+    <mat-card-header>
+      <mat-card-title>Actividad Reciente</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="activity-list">
+        <div class="activity-item">
+          <i class="fas fa-check-circle"></i>
+          <span>Inventario actualizado - Almacén Central</span>
+          <small>Hace 2 horas</small>
+        </div>
+        <div class="activity-item">
+          <i class="fas fa-truck-loading"></i>
+          <span>Nuevo pedido recibido - #12345</span>
+          <small>Hace 3 horas</small>
+        </div>
+        <div class="activity-item">
+          <i class="fas fa-box"></i>
+          <span>Stock bajo en productos - Zona A</span>
+          <small>Hace 4 horas</small>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

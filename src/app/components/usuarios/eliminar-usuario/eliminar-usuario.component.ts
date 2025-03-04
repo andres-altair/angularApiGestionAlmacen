@@ -8,6 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { UsuarioService } from '../../../services/usuario.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-eliminar-usuario',
@@ -27,6 +28,7 @@ import { UsuarioService } from '../../../services/usuario.service';
 export class EliminarUsuarioComponent implements OnInit {
   private fb = inject(FormBuilder);
   private usuarioService = inject(UsuarioService);
+  private authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private snackBar = inject(MatSnackBar);
@@ -37,15 +39,15 @@ export class EliminarUsuarioComponent implements OnInit {
   usuarioId: number = 0;
 
   ngOnInit() {
-    const currentUser = localStorage.getItem('currentUser');
-    if (!currentUser) {
+    // Verificar si el usuario está autenticado y es admin
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser || currentUser.rolId !== 1) {
       this.router.navigate(['/login']);
       return;
     }
 
     this.initForm();
 
-    // Obtener el ID de los query params
     this.route.queryParams.subscribe(params => {
       if (params['id']) {
         this.usuarioId = +params['id'];
@@ -64,6 +66,13 @@ export class EliminarUsuarioComponent implements OnInit {
 
   onSubmit() {
     if (this.eliminarForm.valid) {
+      // Verificar si el usuario sigue autenticado y es admin
+      const currentUser = this.authService.getCurrentUser();
+      if (!currentUser || currentUser.rolId !== 1) {
+        this.router.navigate(['/login']);
+        return;
+      }
+
       this.loading = true;
       this.errorMessage = '';
       const idAEliminar = parseInt(this.eliminarForm.get('usuarioId')?.value);
@@ -88,6 +97,10 @@ export class EliminarUsuarioComponent implements OnInit {
           this.loading = false;
           console.error('Error al eliminar usuario:', error);
           this.errorMessage = 'Error al eliminar el usuario. Por favor, verifica el ID e inténtalo de nuevo.';
+          // Si hay error de autenticación, redirigir al login
+          if (error.status === 401) {
+            this.router.navigate(['/login']);
+          }
         }
       });
     }

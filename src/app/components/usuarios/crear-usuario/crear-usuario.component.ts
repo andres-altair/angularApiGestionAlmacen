@@ -42,15 +42,14 @@ export class CrearUsuarioComponent implements OnInit {
   errorMessage: string = '';
   loading: boolean = false;
   fotoSeleccionada?: string;
-  correoConfirmado?: boolean;
 
   ngOnInit() {
-    // Verificar si el usuario está autenticado
-    const currentUser = localStorage.getItem('currentUser');
-if (!currentUser) {
-  this.router.navigate(['/login']);
-  return;
-}
+    // Verificar si el usuario está autenticado usando AuthService
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser || currentUser.rolId !== 1) {
+      this.router.navigate(['/login']);
+      return;
+    }
 
     this.initForm();
     this.cargarRoles();
@@ -82,7 +81,6 @@ if (!currentUser) {
     if (!file) {
       return;
     }
-    // Validar el tipo de archivo
     if (!file.type.startsWith('image/')) {
       this.mostrarError('El archivo debe ser una imagen');
       return;
@@ -112,8 +110,7 @@ if (!currentUser) {
         movil: this.usuarioForm.get('movil')?.value,
         contrasena: contrasenaHash,
         rolId: this.usuarioForm.get('rolId')?.value,
-        foto: this.fotoSeleccionada === null ? undefined : this.fotoSeleccionada,
-
+        foto: this.fotoSeleccionada === null ? undefined : this.fotoSeleccionada
       };
 
       this.usuarioService.createUsuario(usuario).subscribe({
@@ -124,8 +121,8 @@ if (!currentUser) {
             horizontalPosition: 'center',
             verticalPosition: 'bottom'
           });
-          // Asegurarnos de que mantenemos la sesión al redireccionar
-          if (localStorage.getItem('currentUser')) {
+          // Verificar autenticación usando AuthService
+          if (this.authService.getCurrentUser()) {
             this.router.navigate(['/admin']);
           }
         },

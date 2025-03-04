@@ -14,6 +14,7 @@ import { CrearUsuario } from '../../../models/crearUsuario';
 import { Rol } from '../../../models/rol';
 import { Usuario } from '../../../models/usuario';
 import { finalize } from 'rxjs/operators';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-editar-usuario',
@@ -35,6 +36,7 @@ import { finalize } from 'rxjs/operators';
 export class EditarUsuarioComponent implements OnInit {
   private fb = inject(FormBuilder);
   private usuarioService = inject(UsuarioService);
+  private authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private snackBar = inject(MatSnackBar);
@@ -47,7 +49,6 @@ export class EditarUsuarioComponent implements OnInit {
   fotoPreview?: string;
   fotoSeleccionada?: string;
 
-  // Lista predefinida de roles para asegurar que todos estén disponibles
   rolesDisponibles: Rol[] = [
     { id: 1, rol: 'Administrador' },
     { id: 2, rol: 'Gestor' },
@@ -57,8 +58,8 @@ export class EditarUsuarioComponent implements OnInit {
   ];
 
   ngOnInit() {
-    const currentUser = localStorage.getItem('currentUser');
-    if (!currentUser) {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser || currentUser.rolId !== 1) {
       this.router.navigate(['/login']);
       return;
     }
@@ -89,7 +90,6 @@ export class EditarUsuarioComponent implements OnInit {
   }
 
   private cargarRoles(): void {
-    // Usar la lista predefinida de roles
     this.roles = this.rolesDisponibles;
     console.log('Roles cargados:', this.roles);
   }
@@ -128,6 +128,9 @@ export class EditarUsuarioComponent implements OnInit {
         error: (error) => {
           console.error('Error al cargar usuario:', error);
           this.errorMessage = 'Error al cargar los datos del usuario';
+          if (error.status === 401) {
+            this.router.navigate(['/login']);
+          }
         }
       });
   }
@@ -146,6 +149,12 @@ export class EditarUsuarioComponent implements OnInit {
 
   onSubmit() {
     if (this.usuarioForm.valid) {
+      const currentUser = this.authService.getCurrentUser();
+      if (!currentUser || currentUser.rolId !== 1) {
+        this.router.navigate(['/login']);
+        return;
+      }
+
       this.loading = true;
       this.errorMessage = '';
 
@@ -173,6 +182,9 @@ export class EditarUsuarioComponent implements OnInit {
           error: (error) => {
             console.error('Error al actualizar usuario:', error);
             this.errorMessage = 'Error al actualizar el usuario. Por favor, inténtalo de nuevo.';
+            if (error.status === 401) {
+              this.router.navigate(['/login']);
+            }
           }
         });
     }
