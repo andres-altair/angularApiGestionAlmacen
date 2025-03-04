@@ -39,12 +39,17 @@ export class AuthService {
         tap({
           next: (response) => {
             console.log('Respuesta del servidor en AuthService:', response);
-            // La respuesta del usuario viene directamente
             if (response && response.id) {
               localStorage.setItem('currentUser', JSON.stringify(response));
               localStorage.setItem('token', response.token);
               this.usuarioSubject.next(response);
-              this.router.navigate(['/admin']);  
+              
+              // Redirigir según el rol
+              if (response.rolId === 1) {
+                this.router.navigate(['/admin']);
+              } else {
+                this.router.navigate(['/noAdmin']);
+              }
             }
           },
           error: (error) => {

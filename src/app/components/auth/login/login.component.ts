@@ -1,13 +1,14 @@
-import {Component, inject} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Router, RouterLink} from '@angular/router';
-import {AuthService} from '../../../services/auth.service';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
-import {CommonModule} from '@angular/common';
-import { MenuComponent } from "../../menu/menu.component";
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { MenuComponent } from '../../menu/menu.component';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -19,60 +20,57 @@ import { MenuComponent } from "../../menu/menu.component";
     MatInputModule,
     MatButtonModule,
     MatCardModule,
-    RouterLink,
     MenuComponent
-],
+  ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+  private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
-  private fb = inject(FormBuilder);
+  private snackBar = inject(MatSnackBar);
 
-  loginForm: FormGroup = this.fb.group({
-    correoElectronico: ['', [Validators.required, Validators.email]],
-    contrasena: ['', Validators.required]
-  });
-
+  loginForm!: FormGroup;
   errorMessage: string = '';
+  loading: boolean = false;
+  loginValid: boolean = true;
+  year: number = new Date().getFullYear();
+
+  ngOnInit() {
+    this.initForm();
+  }
+
+  private initForm(): void {
+    this.loginForm = this.fb.group({
+      correoElectronico: ['', [Validators.required, Validators.email]],
+      contrasena: ['', [Validators.required, Validators.minLength(6)]]
+    });
+  }
 
   onSubmit(): void {
     if (this.loginForm.valid) {
+      this.loading = true;
+      this.errorMessage = '';
+
       const { correoElectronico, contrasena } = this.loginForm.value;
-      
-      console.log('Intentando login con email:', correoElectronico); // Para debug
-      
+
       this.authService.login(correoElectronico, contrasena).subscribe({
-        next: (response) => {
-          console.log('Login exitoso - Respuesta completa:', response);
-          // La respuesta viene directamente, no necesitamos buscar en response.usuario
-          if (response && response.id) {  // Verificamos si la respuesta tiene un ID de usuario
-            setTimeout(() => {
-              this.router.navigate(['/admin']).then(
-                success => {
-                  if (!success) {
-                    console.error('Error en navegación: La ruta no está disponible');
-                  }
-                },
-                error => console.error('Error en navegación:', error)
-              );
-            }, 100);
-          } else {
-            console.error('Estructura de la respuesta:', response);
-            this.errorMessage = 'Error al iniciar sesión: datos de usuario inválidos';
-          }
+        next: () => {
+          this.loading = false;
         },
         error: (error) => {
-          console.error('Error detallado:', error);
-          this.errorMessage = 'Error al iniciar sesión';
+          this.loading = false;
+          this.errorMessage = 'Error al iniciar sesión. Por favor, verifica tus credenciales.';
+          this.snackBar.open(this.errorMessage, 'Cerrar', {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom'
+          });
         }
       });
     }
   }
-
-  loginValid: boolean = true;
-  year: number = new Date().getFullYear();
 
   login(): void {
     this.onSubmit();

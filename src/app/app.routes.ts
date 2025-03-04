@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
+import { AdminGuard } from './guards/admin.guard';
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
 
 export const routes: Routes = [
@@ -16,24 +17,29 @@ export const routes: Routes = [
     loadComponent: () => import('./components/auth/register/register.component').then(m => m.RegisterComponent)
   },
   {
+    path: 'noAdmin',
+    loadComponent: () => import('./components/no-admin/no-admin.component').then(m => m.NoAdminComponent),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'admin',
     loadComponent: () => import('./components/usuarios/panel-admin/panel-admin.component').then(m => m.PanelAdminComponent),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard,AdminGuard]
   },
   {
     path: 'crear-usuario',
     loadComponent: () => import('./components/usuarios/crear-usuario/crear-usuario.component').then(m => m.CrearUsuarioComponent),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard,AdminGuard]
   },
   {
     path: 'editar-usuario/:id',
     loadComponent: () => import('./components/usuarios/editar-usuario/editar-usuario.component').then(m => m.EditarUsuarioComponent),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard,AdminGuard]
   },
   {
     path: 'eliminar-usuario',
     loadComponent: () => import('./components/usuarios/eliminar-usuario/eliminar-usuario.component').then(m => m.EliminarUsuarioComponent),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard,AdminGuard]
   },
   { 
     path: '**', 
