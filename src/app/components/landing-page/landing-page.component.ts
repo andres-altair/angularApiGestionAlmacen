@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatToolbarModule } from '@angular/material/toolbar';
-
+import { FooterComponent } from '../footer/footer.component';
 @Component({
   selector: 'app-landing-page',
   standalone: true,
@@ -19,8 +19,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatIconModule,
     MatGridListModule,
     MatDividerModule,
-    MatToolbarModule
-  ],
+    MatToolbarModule,
+    FooterComponent
+],
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.css']
 })

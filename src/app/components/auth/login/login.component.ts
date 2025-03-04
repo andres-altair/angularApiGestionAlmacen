@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { MenuComponent } from '../../menu/menu.component';
 import { AuthService } from '../../../services/auth.service';
 
@@ -16,6 +17,7 @@ import { AuthService } from '../../../services/auth.service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    RouterModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -25,50 +27,49 @@ import { AuthService } from '../../../services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
-  private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
-  private router = inject(Router);
-  private snackBar = inject(MatSnackBar);
-
-  loginForm!: FormGroup;
+export class LoginComponent {
+  loginForm: FormGroup;
+  loading = false;
   errorMessage: string = '';
-  loading: boolean = false;
   loginValid: boolean = true;
   year: number = new Date().getFullYear();
 
-  ngOnInit() {
-    this.initForm();
-  }
-
-  private initForm(): void {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {
     this.loginForm = this.fb.group({
       correoElectronico: ['', [Validators.required, Validators.email]],
       contrasena: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.loginForm.valid) {
       this.loading = true;
       this.errorMessage = '';
 
-      const { correoElectronico, contrasena } = this.loginForm.value;
-
-      this.authService.login(correoElectronico, contrasena).subscribe({
-        next: () => {
-          this.loading = false;
-        },
-        error: (error) => {
-          this.loading = false;
-          this.errorMessage = 'Error al iniciar sesión. Por favor, verifica tus credenciales.';
-          this.snackBar.open(this.errorMessage, 'Cerrar', {
-            duration: 5000,
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom'
-          });
+      try {
+        const result = await this.authService.login(
+          this.loginForm.get('correoElectronico')?.value,
+          this.loginForm.get('contrasena')?.value
+        );
+        
+        if (result) {
+          this.router.navigate(['/admin']);
         }
-      });
+      } catch (error: any) {
+        this.errorMessage = 'Error al iniciar sesión: ' + (error.message || 'Error desconocido');
+        this.snackBar.open(this.errorMessage, 'Cerrar', {
+          duration: 5000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        });
+      } finally {
+        this.loading = false;
+      }
     }
   }
 

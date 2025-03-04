@@ -1,7 +1,13 @@
 <div class="landing-container mat-typography">
-  <mat-toolbar color="primary" class="title-toolbar">
-    <h1>Sistema de Gestión de Almacén</h1>
-  </mat-toolbar>
+  <header class="hero-section">
+    <div class="hero-content">
+      <h1 class="main-title">
+        <i class="fas fa-warehouse"></i>
+        Sistema de Gestión de Almacén
+      </h1>
+      <p class="subtitle">Gestión eficiente y control total de tu inventario</p>
+    </div>
+  </header>
 
   <mat-card class="hero-section">
     <mat-card-content>
@@ -36,7 +42,9 @@
   </mat-card>
 
   <section class="features-section">
-    <h2>Características Principales</h2>
+    <div class="section-header">
+      <h2 class="features-title text-center">Características Principales</h2>
+    </div>
     <mat-grid-list cols="2" rowHeight="200px" gutterSize="16">
       <mat-grid-tile *ngFor="let feature of features">
         <mat-card class="feature-card">
@@ -52,3 +60,4 @@
     </mat-grid-list>
   </section>
 </div>
+<app-footer></app-footer>
