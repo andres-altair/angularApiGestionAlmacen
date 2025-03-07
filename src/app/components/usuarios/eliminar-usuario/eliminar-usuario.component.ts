@@ -78,8 +78,11 @@ export class EliminarUsuarioComponent implements OnInit {
       const idAEliminar = parseInt(this.eliminarForm.get('usuarioId')?.value);
 
       if (idAEliminar !== this.usuarioId) {
-        this.errorMessage = 'El ID ingresado no coincide con el usuario a eliminar';
-        this.loading = false;
+        this.snackBar.open('No se ha encontrado el usuario con el ID proporcionado', 'Cerrar', {
+          duration: 5000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        });this.loading = false;
         return;
       }
 
@@ -95,9 +98,11 @@ export class EliminarUsuarioComponent implements OnInit {
         },
         error: (error) => {
           this.loading = false;
-          console.error('Error al eliminar usuario:', error);
-          this.errorMessage = 'Error al eliminar el usuario. Por favor, verifica el ID e inténtalo de nuevo.';
-          // Si hay error de autenticación, redirigir al login
+          this.snackBar.open('Error al eliminar el usuario', 'Cerrar', {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom'
+          });
           if (error.status === 401) {
             this.router.navigate(['/login']);
           }
@@ -106,7 +111,4 @@ export class EliminarUsuarioComponent implements OnInit {
     }
   }
 
-  cancelar() {
-    this.router.navigate(['/admin']);
-  }
 }

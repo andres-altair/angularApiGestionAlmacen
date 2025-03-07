@@ -128,8 +128,11 @@ export class CrearUsuarioComponent implements OnInit {
         },
         error: (error) => {
           this.loading = false;
-          console.error('Error al crear usuario:', error);
-          this.errorMessage = 'Error al crear el usuario. Por favor, inténtalo de nuevo.';
+          this.snackBar.open('Hubo un error al crear el usuario', 'Cerrar', {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom'
+          });
         }
       });
     } else {
@@ -146,7 +149,4 @@ export class CrearUsuarioComponent implements OnInit {
     });
   }
 
-  volverAPanelAdmin() {
-    this.router.navigate(['/admin']);
-  }
 }

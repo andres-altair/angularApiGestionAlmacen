@@ -181,16 +181,19 @@ export class EditarUsuarioComponent implements OnInit {
           },
           error: (error) => {
             console.error('Error al actualizar usuario:', error);
-            this.errorMessage = 'Error al actualizar el usuario. Por favor, inténtalo de nuevo.';
+            const mensajeError = error.status === 401 ? 'Sesión expirada' : 'Error al actualizar usuario';
+            this.snackBar.open(mensajeError, 'OK', {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            });
             if (error.status === 401) {
               this.router.navigate(['/login']);
             }
+            this.loading = false;
           }
         });
     }
   }
 
-  cancelar() {
-    this.router.navigate(['/admin']);
-  }
 }

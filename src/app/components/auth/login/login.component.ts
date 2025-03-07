@@ -50,7 +50,7 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.loading = true;
       this.errorMessage = '';
-  
+
       this.authService.login(
         this.loginForm.get('correoElectronico')?.value,
         this.loginForm.get('contrasena')?.value
@@ -60,14 +60,22 @@ export class LoginComponent {
           // La navegación ya está manejada en el AuthService
         },
         error: (error) => {
-          this.errorMessage = 'Error al iniciar sesión: ' + (error.message || 'Error desconocido');
-          this.snackBar.open(this.errorMessage, 'Cerrar', {
-            duration: 5000,
+          const mensajeError = error.status === 401 ? 'Credenciales incorrectas' : 'Error en el inicio de sesión';
+          this.snackBar.open(mensajeError, 'OK', {
+            duration: 3000,
             horizontalPosition: 'center',
-            verticalPosition: 'bottom'
+            verticalPosition: 'bottom',
+            panelClass: ['error-snackbar']
           });
           this.loading = false;
         }
+      });
+    } else {
+      this.snackBar.open('Por favor, complete todos los campos correctamente', 'OK', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['error-snackbar']
       });
     }
   }
