@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatButton } from '@angular/material/button';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -9,7 +9,8 @@ import { Router, RouterLink } from '@angular/router';
   imports: [
     MatToolbar,
     MatButton,
-    RouterLink
+    RouterLink,
+    RouterModule
   ],
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.css']
@@ -23,7 +24,5 @@ export class MenuComponent {
     // Redirigir al login
     this.router.navigate(['/login']);
   }
-  volverAInicio() {
-    this.router.navigate(['/']);
-  }
+
 }

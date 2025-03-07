@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MenuComponent } from '../menu/menu.component';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Usuario } from '../../models/usuario';
+import { FooterComponent } from '../footer/footer.component';
 
 @Component({
   selector: 'app-no-admin',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MenuComponent],
+  imports: [CommonModule, MatCardModule, MenuComponent, RouterModule, FooterComponent],
   templateUrl: './no-admin.component.html',
   styleUrls: ['./no-admin.component.css']
 })

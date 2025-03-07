@@ -66,7 +66,5 @@ export class PanelAdminComponent implements OnInit {
     this.router.navigate(['/editar-usuario', id]);
   }
 
-  volverAInicio() {
-    this.router.navigate(['/']);
-  }
+
 }

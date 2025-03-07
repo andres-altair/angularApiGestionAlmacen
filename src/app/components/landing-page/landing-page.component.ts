@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,6 +14,7 @@ import { FooterComponent } from '../footer/footer.component';
   imports: [
     CommonModule,
     RouterLink,
+    RouterModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
