@@ -59,7 +59,12 @@ export class CrearUsuarioComponent implements OnInit {
     this.usuarioForm = this.fb.group({
       nombreCompleto: ['', [Validators.required, Validators.maxLength(50)]],
       correoElectronico: ['', [Validators.required, Validators.email]],
-      movil: ['', [Validators.maxLength(15)]],
+      movil: ['', [
+        Validators.required,
+        Validators.pattern('^[0-9]{9,15}$'),
+        Validators.minLength(9),
+        Validators.maxLength(15)
+      ]],
       contrasena: ['', [Validators.required, Validators.minLength(6)]],
       rolId: ['', [Validators.required]],
       foto: [undefined]

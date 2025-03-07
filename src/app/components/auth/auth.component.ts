@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { UsuarioService } from '../../services/usuario.service';
 import { CrearUsuario } from '../../models/crearUsuario';
 import * as CryptoJS from 'crypto-js';
+
 @Component({
   selector: 'app-auth',
   standalone: true,
@@ -44,7 +45,12 @@ export class AuthComponent implements OnInit {
     this.usuarioForm = this.fb.group({
       nombreCompleto: ['', [Validators.required, Validators.maxLength(50)]],
       correoElectronico: ['', [Validators.required, Validators.email]],
-      movil: ['', [Validators.maxLength(15)]],
+      movil: ['', [
+        Validators.required,
+        Validators.pattern('^[0-9]{9,15}$'),
+        Validators.minLength(9),
+        Validators.maxLength(15)
+      ]],
       contrasena: ['', [Validators.required, Validators.minLength(6)]],
       rolId: ['', Validators.required]
     });
@@ -79,18 +85,18 @@ export class AuthComponent implements OnInit {
           contrasena: this.usuarioForm.get('contrasena')?.value
         };
         const contrasenaPlana = this.usuarioForm.get('contrasena')?.value;
-      const contrasenaHash = CryptoJS.SHA256(contrasenaPlana).toString();
+        const contrasenaHash = CryptoJS.SHA256(contrasenaPlana).toString();
 
-      const usuario: CrearUsuario = {
-        nombreCompleto: this.usuarioForm.get('nombreCompleto')?.value,
-        correoElectronico: this.usuarioForm.get('correoElectronico')?.value,
-        movil: this.usuarioForm.get('movil')?.value,
-        contrasena: contrasenaHash,
-        rolId: this.usuarioForm.get('rolId')?.value,
-        foto: this.fotoSeleccionada === null ? undefined : this.fotoSeleccionada
-      };
+        const usuario: CrearUsuario = {
+          nombreCompleto: this.usuarioForm.get('nombreCompleto')?.value,
+          correoElectronico: this.usuarioForm.get('correoElectronico')?.value,
+          movil: this.usuarioForm.get('movil')?.value,
+          contrasena: contrasenaHash,
+          rolId: this.usuarioForm.get('rolId')?.value,
+          foto: this.fotoSeleccionada === null ? undefined : this.fotoSeleccionada
+        };
 
-      await this.usuarioService.createUsuario(usuario).toPromise();
+        await this.usuarioService.createUsuario(usuario).toPromise();
         
         if (this.fotoFile) {
           // Aquí iría la lógica para subir la foto si es necesario

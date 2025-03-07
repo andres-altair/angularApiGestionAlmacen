@@ -25,7 +25,20 @@
 
       <mat-form-field appearance="fill">
         <mat-label>Móvil</mat-label>
-        <input matInput formControlName="movil" required>
+        <input matInput formControlName="movil" placeholder="Ej: 612345678" required>
+        <mat-hint>Entre 9 y 15 números (solo dígitos)</mat-hint>
+        <mat-error *ngIf="usuarioForm.get('movil')?.hasError('required')">
+          El número móvil es requerido
+        </mat-error>
+        <mat-error *ngIf="usuarioForm.get('movil')?.hasError('pattern')">
+          Solo se permiten números
+        </mat-error>
+        <mat-error *ngIf="usuarioForm.get('movil')?.hasError('minlength')">
+          Debe tener al menos 9 números
+        </mat-error>
+        <mat-error *ngIf="usuarioForm.get('movil')?.hasError('maxlength')">
+          No puede exceder 15 números
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill">

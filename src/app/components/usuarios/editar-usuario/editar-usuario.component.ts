@@ -78,10 +78,16 @@ export class EditarUsuarioComponent implements OnInit {
 
   private initForm(): void {
     this.usuarioForm = this.fb.group({
-      nombreCompleto: ['', [Validators.required]],
+      nombreCompleto: ['', [Validators.required, Validators.maxLength(50)]],
       correoElectronico: ['', [Validators.required, Validators.email]],
-      movil: ['', [Validators.required]],
-      rolId: [null, [Validators.required]]
+      movil: ['', [
+        Validators.required,
+        Validators.pattern('^[0-9]{9,15}$'),
+        Validators.minLength(9),
+        Validators.maxLength(15)
+      ]],
+      rolId: ['', Validators.required],
+      foto: [null]
     });
 
     this.usuarioForm.get('rolId')?.valueChanges.subscribe(value => {
