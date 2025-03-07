@@ -46,34 +46,29 @@ export class LoginComponent {
     });
   }
 
-  async onSubmit(): Promise<void> {
+  onSubmit(): void {
     if (this.loginForm.valid) {
       this.loading = true;
       this.errorMessage = '';
-
-      try {
-        const result = await this.authService.login(
-          this.loginForm.get('correoElectronico')?.value,
-          this.loginForm.get('contrasena')?.value
-        );
-        
-        if (result) {
-          this.router.navigate(['/admin']);
+  
+      this.authService.login(
+        this.loginForm.get('correoElectronico')?.value,
+        this.loginForm.get('contrasena')?.value
+      ).subscribe({
+        next: (result) => {
+          console.log('Login exitoso:', result);
+          // La navegación ya está manejada en el AuthService
+        },
+        error: (error) => {
+          this.errorMessage = 'Error al iniciar sesión: ' + (error.message || 'Error desconocido');
+          this.snackBar.open(this.errorMessage, 'Cerrar', {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom'
+          });
+          this.loading = false;
         }
-      } catch (error: any) {
-        this.errorMessage = 'Error al iniciar sesión: ' + (error.message || 'Error desconocido');
-        this.snackBar.open(this.errorMessage, 'Cerrar', {
-          duration: 5000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom'
-        });
-      } finally {
-        this.loading = false;
-      }
+      });
     }
-  }
-
-  login(): void {
-    this.onSubmit();
   }
 }
